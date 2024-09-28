@@ -1,0 +1,46 @@
+[
+    {
+        "id": 1,
+        "name": "Test",
+        "surname": "Test",
+        "email": "test@test.com",
+        "password": "test1234",
+        "profilePicture": "temp.png",
+        "bio": "here is a short bio",
+        "instagram": "insta here",
+        "facebook": "facebook here",
+        "tiktok": "tiktok here",
+        "twitter": "twitter here",
+        "playlists": [            
+            1, 2
+        ],
+        "following": [            
+            2
+        ],
+        "followers": [            
+            2            
+        ]
+    },
+    {
+        "id": 2,
+        "name": "Test1",
+        "surname": "Test2",
+        "email": "test1@test.com",
+        "password": "test1234",
+        "profilePicture": "temp.png",
+        "bio": "here is a short bio",
+        "instagram": "insta here",
+        "facebook": "facebook here",
+        "tiktok": "tiktok here",
+        "twitter": "twitter here",
+        "playlists": [            
+            3, 4            
+        ],
+        "following": [
+            1
+        ],
+        "followers": [
+            1            
+        ]
+    }
+]
