@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "frontend/src/server.js",
-
+  "type": "module",
   "scripts": {
     "build": "npx webpack && babel backend/server.js -d backend/dist",
     "start": "npm run build && node backend/dist/server.js",

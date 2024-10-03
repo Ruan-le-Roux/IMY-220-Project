@@ -60,6 +60,36 @@ async function generateId()
     return maxId + 1;
 }
 
+async function generatePlaylistId()
+{
+    const playlists = await db.collection("playlists").find({}).toArray();
+    if(playlists.length === 0)
+    {
+        return 1;
+    }
+
+    const maxId = Math.max(...playlists.map(playlist => playlist.id));
+    return maxId + 1;
+}
+
+async function generateCommentId(id)
+{
+    const playlist = await db.collection("playlists").findOne({id: parseInt(id)});
+
+    let count = playlist.comments ? playlist.comments.length : 0;
+    if(count === 0)
+    {
+        return 1;
+    }
+    else
+    {
+        let existingCommentIds = playlist.comments.map(comment => comment.id);
+        let maxId = Math.max(...existingCommentIds);
+        maxId ++;
+        return maxId;
+    }
+}
+
 async function existingUser(flag, delimiter)
 {
     if(flag === true)
@@ -83,6 +113,58 @@ async function existingUser(flag, delimiter)
     }
 }
 
+async function existingPlaylist(id)
+{    
+    const existingPlaylist = await db.collection("playlists").findOne({id: parseInt(id)});
+
+    if(existingPlaylist)
+    {
+        // console.log("aspodufhbepirufh, ", id);
+        return true;
+    }
+    return false;
+}
+
+async function existingSong(id)
+{    
+    const existingSong = await db.collection("songs").findOne({id: parseInt(id)});
+
+    if(existingSong)
+    {
+        // console.log("aspodufhbepirufh, ", id);
+        return true;
+    }
+    return false;
+}
+
+async function songInPlaylist(song, playlist)
+{    
+    const exists = await db.collection("playlists").findOne({id: parseInt(playlist), songId: parseInt(song)});
+    // console.log("here: ", exists);
+
+    if(exists)
+    {
+        // console.log("aspodufhbepirufh");
+        return true;
+    }
+    return false;
+}
+
+async function existingComment(comment, playlist)
+{    
+    const exists = await db.collection("playlists").findOne(
+        {id: parseInt(playlist)}, 
+        {projection: {comments: {$elemMatch: {id: parseInt(comment)}}}});
+    // console.log("here: ", exists);
+
+    if(exists)
+    {
+        // console.log("aspodufhbepirufh");
+        return true;
+    }
+    return false;
+}
+
 //endpoints
 
 //users
@@ -91,7 +173,7 @@ app.get("/api/users", async (req, res) => {
     try
     {
         const users = await db.collection("users").find({}).toArray();
-        res.status(200).json({status: "success", users: users});
+        res.status(200).json({status: "success", data: users});
     }
     catch(error)
     {
@@ -161,7 +243,7 @@ app.post("/api/users/add-user", async (req, res) => {
         res.status(201).json({
             status: "success",
             message: "User created successfully",
-            user: newUser 
+            data: newUser 
         });
     }
     catch(error)
@@ -314,7 +396,7 @@ app.get("/api/users/:id", async (req, res) => {
 
         const user = await db.collection("users").findOne({ id: parseInt(id) });
 
-        res.status(200).json({status: "success", user: user});
+        res.status(200).json({status: "success", data: user});
     }
     catch(error)
     {
@@ -346,7 +428,7 @@ app.post("/api/users/login", async (req, res) => {
             return res.status(401).json({status: "failed", message: "password incorrect"});
         }
 
-        res.status(200).json({status: "success", message: "login successful", user: {id: user.id, name: user.name, email: user.email}});
+        res.status(200).json({status: "success", message: "login successful", data: {id: user.id, name: user.name, email: user.email}});
     }
     catch(error)
     {
@@ -355,7 +437,382 @@ app.post("/api/users/login", async (req, res) => {
     }
 });
 
-//
+//playlists
+//create playlists
+
+app.post("/api/playlist/create-playlist", async (req, res) => {
+    try
+    {
+        const { userId, name, category, description, coverImage, hashTags, songId, comments } = req.body;
+
+        // console.log("userId: ", userId, "name: ", name);
+        // console.log("req body: ", req.body);
+
+        if(!userId || !name)
+        {
+            return res.status(400).json({status: "Failed", message: "userId and playlist name required"});
+        }
+
+        const existingUser = await db.collection("users").findOne({id: userId});
+
+        if(!existingUser)
+        {
+            return res.status(404).json({status: "failed", message: `No user with id ${userId} found`});
+        }
+
+        const id = await generatePlaylistId();
+
+        const newPlaylist = {
+            id,
+            userId,
+            name,
+            category: category || '',
+            description: description || '',
+            coverImage: coverImage || '',
+            hashTags: hashTags || '',
+            songId: songId || [],
+            comments: comments || []
+        };
+
+        // console.log("newPlaylist: ", newPlaylist)
+
+        const result = await db.collection("playlists").insertOne(newPlaylist);
+
+        const updateUsers = await db.collection("users").updateOne(
+            { id: userId },
+            {$push: {playlists: id}}
+        );
+
+        if(result.acknowledged && updateUsers.modifiedCount === 1)
+        {
+            return res.status(201).json({status: "success", message: "Playlist created and added to users playlists", data: newPlaylist});
+        }
+        else
+        {
+            return res.status(500).json({status: "failed", message: "Playlist created but could not add playlist to users playlists"});
+        }
+
+        // res.status(201).json({status: "success", message: "Playlist created successfully", playlist: newPlaylist});
+    }
+    catch(error)
+    {
+        console.error("Error while creating playlist: ", error);
+        return res.status(500).json({status: "failed", message: "Could not create playlist"});
+    }
+});
+
+//get all playlists
+app.get("/api/playlists", async (req, res) => {
+    try
+    {
+        const playlists = await db.collection("playlists").find({}).toArray();
+        res.status(200).json({status: "success", message: "all playlists", data: playlists});
+    }
+    catch(error)
+    {
+        console.error("Error getting all playlists: ", error);
+        res.status(500).json({status: "failed", message: "Could not get all playlists"});
+    }
+});
+
+//update playlist
+app.put("/api/playlists/update-playlist/:id", async (req, res) => {
+    const {id} = req.params;
+    const 
+    {
+        name,
+        category,
+        description,
+        coverImage,
+        hashTags,
+    } = req.body;
+    
+    try
+    {
+        const exists = await existingPlaylist(id);
+
+        if(exists === false)
+        {
+            return res.status(404).json({status: "failed", message: `Could not find playlist with id ${id}`});
+        }
+
+        let updated = {};
+
+        if(name)
+        {
+            updated.name = name;
+        }
+        if(category)
+        {
+            updated.category = category;
+        }
+        if(description)
+        {
+            updated.description = description;
+        }
+        if(coverImage)
+        {
+            updated.coverImage = coverImage;
+        }
+        if(hashTags)
+        {
+            updated.hashTags = hashTags;
+        }
+
+        await db.collection("playlists").updateOne({id: parseInt(id)}, {$set: updated});
+
+        res.status(200).json({status: "success", message: "Playlist updated"});
+    }
+    catch(error)
+    {
+        console.error("Error when updating playlist: ", error);
+        res.status(500).json({status: "failed", message: "Could not update playlist"});
+    }
+});
+
+//delete playlist
+app.delete("/api/playlists/delete-playlist/:id", async (req, res) => {
+    const {id} = req.params;
+
+    try
+    {
+        const exists = await existingPlaylist(id);
+
+        if(exists === false)
+        {
+            return res.status(404).json({status: "failed", message: `Playlist with id ${id} does not exist`});
+        }
+
+        const result = await db.collection("playlists").deleteOne({id: parseInt(id)});
+
+        if(result.deletedCount === 1)
+        {
+            await db.collection("users").updateMany({}, {$pull: {playlists: parseInt(id)}});
+
+            return res.status(200).json({status: "success", message: `Playlist with id ${id} delete`});
+        }
+        else
+        {
+            return res.status(500).json({status: "failed", message: `Could not delete playlist with id ${id}`});
+        }
+    }
+    catch(error)
+    {
+        console.error("Error when deleting playlist: ", error);
+        return res.status(500).json({status: "failed", message: "Could not delete playlist"});
+    }
+});
+
+//get playlist by id
+app.get("/api/playlists/:id", async (req, res) => {
+    const {id} = req.params;
+    
+    try
+    {
+        const exists = await existingPlaylist(id);
+
+        if(exists === false)
+        {
+            return res.status(404).json({status: "failed", message: `Could not find playlist with id ${id}`});
+        }
+
+        const playlist = await db.collection("playlists").findOne({id: parseInt(id)});
+
+        return res.status(200).json({status: "success", data: playlist});
+    }
+    catch(error)
+    {
+        console.error("Error when getting playlist with id: ", error);
+        return res.status(500).json({status: "failed", message: "Could not get playlist by id"});
+    }    
+});
+
+//add song
+app.put("/api/playlists/add-song/:id", async (req, res) => {
+
+    const {id} = req.params;
+
+    const { songId } = req.body;
+
+    try
+    {
+        const playlistExists = await existingPlaylist(id);
+        const songExists = await existingSong(songId);
+
+        if(songExists === false)
+        {
+            return res.status(404).json({status: "failed", message: `Song with id ${songId} does not exist`});
+        }
+
+        if(playlistExists === false)
+        {
+            return res.status(404).json({status: "failed", message: `Playlist with id ${id} does not exist`});
+        }
+
+        const exists = await songInPlaylist(songId, id);
+
+        if(exists === true)
+        {
+            return res.status(409).json({status: "failed", message: "Song already in playlist"});
+        }
+
+        const result = await db.collection("playlists").updateOne({id: parseInt(id)}, {$push: {songId: songId}});
+
+
+        if(result.modifiedCount === 1)
+        {
+            return res.status(200).json({status: "success", message: "Added song to playlist"});
+        }
+        else
+        {
+            return res.status(500).json({status: "failed", message: "Could not add song to playlist"});
+        }
+    }
+    catch(error)
+    {
+        console.error("Error when adding song to playlist: ", error);
+        return res.status(500).json({status: "failed", message: "Could not add song to playlist"});
+    }
+});
+
+//delete song from playlist
+app.put("/api/playlists/delete-song/:id", async (req, res) => {
+
+    const {id} = req.params;
+
+    const { songId } = req.body;
+
+    try
+    {
+        const playlistExists = await existingPlaylist(id);
+        const songExists = await existingSong(songId);
+
+        if(songExists === false)
+        {
+            return res.status(404).json({status: "failed", message: `Song with id ${songId} does not exist`});
+        }
+
+        if(playlistExists === false)
+        {
+            return res.status(404).json({status: "failed", message: `Playlist with id ${id} does not exist`});
+        }
+
+        const exists = await songInPlaylist(songId, id);
+
+        if(exists === false)
+        {
+            return res.status(404).json({status: "failed", message: "Song not in playlist"});
+        }
+
+        const result = await db.collection("playlists").updateOne({id: parseInt(id)}, {$pull: {songId: songId}});
+
+
+        if(result.modifiedCount === 1)
+        {
+            return res.status(200).json({status: "success", message: "removed song from playlist"});
+        }
+        else 
+        {
+            return res.status(404).json({ status: "failed", message: "Song not found in the playlist" });
+        }
+    }
+    catch(error)
+    {
+        console.error("Error when removing song from playlist: ", error);
+        return res.status(500).json({status: "failed", message: "Could not remove song from playlist"});
+    }
+});
+
+//add comment to a playlist
+app.put("/api/playlists/add-comment/:id", async (req, res) => {
+    const {id} = req.params;
+
+    const {userId, text, image} = req.body;
+
+    try
+    {
+        const exists = await existingPlaylist(id);
+
+        if(exists === false)
+        {
+            return res.status(404).json({status: "failed", message: "Playlist does not exists"});
+        }
+
+        const commentId = await generateCommentId(id);
+
+        const newComment = 
+        {
+            id: commentId,
+            userId,
+            text,
+            image: image || null,
+            timestamp: new Date(),
+        };
+
+        const result = await db.collection("playlists").updateOne(
+            {id: parseInt(id)},
+            { $push: {comments: newComment}}
+        );
+
+        if(result.modifiedCount === 1)
+        {
+            return res.status(201).json({status: "success", message: "Comment added"});
+        }
+        else
+        {
+            return res.status(500).json({status: "failed", message: "Could not add comment"});
+        }
+    }
+    catch(error)
+    {
+        console.error("Error when adding comment: ", error);
+        return res.status(500).json({status: "failed", message: "Could not add comment"});
+    }
+});
+
+//delete comment
+app.put("/api/playlists/delete-comment/:id", async (req, res) => {
+    const {id} = req.params;
+
+    const {commentId} = req.body;
+
+    try
+    {
+        const exists = await existingPlaylist(id);
+        const commentExists = await existingComment(commentId, id);
+
+        if(exists === false)
+        {
+            return res.status(404).json({status: "failed", message: "Playlist does not exist"});
+        }
+        if(commentExists === false)
+        {
+            return res.status(404).json({status: "failed", message: "Comment does not exist"});
+        }
+
+        const result = await db.collection("playlists").updateOne(
+            {id: parseInt(id)}, 
+            {$pull: {comments: {id: parseInt(commentId)}}}
+        );
+
+        if(result.modifiedCount === 1)
+        {
+            return res.status(200).json({status: "success", message: "Deleted comment"});
+        }
+        else
+        {
+            return res.status(500).json({status: "failed", message: "Could not delete comment"});
+        }
+    }
+    catch(error)
+    {
+        console.error("Error when deleting comment: ", error);
+        return res.status(500).json({status: "failed", message: "Could not delete comment"});
+    }
+});
+
+
+
 
 
 
