@@ -4,63 +4,6 @@
         "title": "song 1",
         "artist": "artist",
         "link": "link here",
-        "cover": "cover here",
-        "dateAdded": "28-09-2024"
-    },
-    {
-        "id": 2,
-        "title": "song 2",
-        "artist": "artist",
-        "link": "link here",
-        "cover": "cover here",
-        "dateAdded": "28-09-2024"
-    },
-    {
-        "id": 3,
-        "title": "song 3",
-        "artist": "artist",
-        "link": "link here",
-        "cover": "cover here",
-        "dateAdded": "28-09-2024"
-    },
-    {
-        "id": 4,
-        "title": "song 4",
-        "artist": "artist",
-        "link": "link here",
-        "cover": "cover here",
-        "dateAdded": "28-09-2024"
-    },
-    {
-        "id": 5,
-        "title": "song 5",
-        "artist": "artist",
-        "link": "link here",
-        "cover": "cover here",
-        "dateAdded": "28-09-2024"
-    },
-    {
-        "id": 6,
-        "title": "song 6",
-        "artist": "artist",
-        "link": "link here",
-        "cover": "cover here",
-        "dateAdded": "28-09-2024"
-    },
-    {
-        "id": 7,
-        "title": "song 7",
-        "artist": "artist",
-        "link": "link here",
-        "cover": "cover here",
-        "dateAdded": "28-09-2024"
-    },
-    {
-        "id": 8,
-        "title": "song 8",
-        "artist": "artist",
-        "link": "link here",
-        "cover": "cover here",
         "dateAdded": "28-09-2024"
     }
 ]

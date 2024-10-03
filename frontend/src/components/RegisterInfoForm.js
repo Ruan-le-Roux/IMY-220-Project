@@ -13,14 +13,20 @@ class RegisterInfoForm extends React.Component
             surname: '',
             email: '',
             password: '',
-            submitted:  false
+            submitted:  false,
+            errorMessage: '',
         };
     }
 
-    submitForm = (e) => {
-        e.preventDefault();
+    handleChange = (e) => {
+        this.setState({ [r.target.name]: e.target.value});
+    };
 
+    submitForm = async (e) => {
+        e.preventDefault();
         this.setState({submitted: true});
+
+        
 
     };
 
