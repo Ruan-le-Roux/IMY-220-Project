@@ -24,3 +24,8 @@ SoundSync123
 
 connection string:
 mongodb+srv://u23782219:SoundSync123@soundsync-cluster.xmi82.mongodb.net/?retryWrites=true&w=majority&appName=SoundSync-cluster
+
+
+
+add this to use nodemon for dev:
+"type": "module"

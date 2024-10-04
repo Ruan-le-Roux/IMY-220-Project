@@ -13,6 +13,7 @@ class MyPlaylists extends React.Component
 
         this.state = {
             seeAll: false,
+            playLists: [],            
         };
 
         this.handleSeeAll = this.handleSeeAll.bind(this);
@@ -23,7 +24,29 @@ class MyPlaylists extends React.Component
         this.setState({seeAll: true});
     }
 
+    async componentDidMount()
+    {
+        try
+        {
+            const userId = localStorage.getItem('userId');
 
+            const res = await fetch(`/api/playlist/my-playlists/${userId}`);
+            const data = await res.json();
+
+            if(res.ok)
+            {
+                this.setState({playlists: data.data});
+            }
+            else
+            {
+                console.error(data.message);
+            }
+        }
+        catch(error)
+        {
+            console.error('Error getting my playlists: ', error);
+        }
+    }
 
     render()
     {
@@ -40,15 +63,22 @@ class MyPlaylists extends React.Component
                 <button onClick = {this.handleSeeAll}>See All</button>
 
                 <div>
-                    <section>
-                        <img src = {playlistPic} arc = "Picture of Playlist" title = "Picture of Playlist"/>
-                        
-                        <div>
-                            <h4>Playlist Name</h4>
+                    {this.state.playlists.length > 0 ? (
+                        this.state.playlists.map((playlist) => (
+                            <section>
+                                <img src = {playlistPic} alt = "Picture of Playlist" title = "Picture of Playlist"/>
+                                
+                                <div>
+                                    <h4>{playlist.data.name}</h4>
 
-                            <p>By Name</p>
-                        </div>
-                    </section>
+                                    <p>me</p>
+                                </div>
+                            </section>
+
+                        ))
+                    ) : (
+                        <p>no playLists</p>
+                    )}
                 </div>
             </div>
         );

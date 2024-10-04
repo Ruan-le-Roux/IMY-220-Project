@@ -11,7 +11,6 @@ import twitter from '../../public/assets/images/twitter.png';
 
 class ProfileInfoForm extends React.Component
 {
-
     constructor(props)
     {
         super(props);
@@ -23,19 +22,65 @@ class ProfileInfoForm extends React.Component
             facebook: '',
             tiktok: '',
             twitter: '',
-            isSubmitted: false
-        }
+            isSubmitted: false,
+            errorMessage: '',
+        };
 
         this.submitForm = this.submitForm.bind(this);
     }
 
-    submitForm(e) 
+    handleChange = (e) => {
+        this.setState({[e.target.name]: e.target.value});
+    };
+
+    submitForm = async (e) => 
     {
         e.preventDefault();
+        // this.setState({isSubmitted: true});
 
-        this.setState({isSubmitted: true});
+        const 
+        {
+            profilePicture,
+            bio,
+            instagram,
+            facebook,
+            tiktok,
+            twitter,
+        } = this.state;
 
-        
+        try
+        {
+            const userId = localStorage.getItem('userId');
+            const res = await fetch(`/api/users/update-user/${userId}`, {
+                method: 'PUT',
+                headers: 
+                {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    profilePicture, 
+                    bio, instagram, 
+                    facebook, 
+                    tiktok, 
+                    twitter, 
+                })
+            });
+
+            const data = await res.json();
+            if(res.ok)
+            {
+                this.setState({isSubmitted: true});
+            }
+            else
+            {
+                this.setState({errorMessage: data.data.message});
+            }
+        }
+        catch(error)
+        {
+            console.error('Error registering: ', error);
+            this.setState({errorMessage: data.message});
+        }        
 
         // window.location.href = '/Home';
 
@@ -45,45 +90,49 @@ class ProfileInfoForm extends React.Component
 
     render()
     {        
-        if(this.state.isSubmitted)
+        const {isSubmitted, errorMessage } = this.state;
+
+        if(isSubmitted)
         {
             return <Navigate to = '/Home'/>;            
         }
         return(
             <div>
                     <form onSubmit = { this.submitForm }>
+                        {errorMessage && <div style = {{color: 'red'}}>{errorMessage}</div>}
+
 
                         <label>
                             Profile Picture:
 
-                            <input type = "file" accept = "image/*"/>
+                            <input type = "file" name = 'profilePicture' accept = "image/*" onChange={this.handleChange}/>
                         </label>
                     
                         <label>
                             Bio: <span>*</span>
-                            <textarea rows = "4"cols = "50" placeholder = "Short bio about myself" required></textarea>
+                            <textarea rows = "4"cols = "50" name = 'bio' placeholder = "Short bio about myself" onChange={this.handleChange}></textarea>
                         </label>
 
                         <p>Other social accounts:</p> 
 
                         <label>
                             <img src = {instagram} alt = "Instagram logo" title = "Instagram logo"/>
-                            <input type = "text" placeholder = "link to your Instagram account" />
+                            <input type = "text" name = 'instagram' onChange={this.handleChange} placeholder = "link to your Instagram account" />
                         </label>
 
                         <label>
                             <img src = {facebook} alt = "Facebook logo" title = "Facebook logo"/>
-                            <input type = "text" placeholder = "link to your Facebook account" />
+                            <input type = "text" name = 'facebook' onChange={this.handleChange} placeholder = "link to your Facebook account" />
                         </label>
 
                         <label>
                             <img src = {tiktok} alt = "TikTok logo" title = "TikTok logo"/>
-                            <input type = "text" placeholder = "link to your TikTok account" />
+                            <input type = "text" name = 'tiktok' onChange={this.handleChange} placeholder = "link to your TikTok account" />
                         </label>
 
                         <label>
                             <img src = {twitter} alt = "Twitter logo" title = "Twitter logo"/>
-                            <input type = "text" placeholder = "link to your Twitter account" />
+                            <input type = "text" name = 'twitter' onChange={this.handleChange}  placeholder = "link to your Twitter account" />
                         </label>
 
                         <button type = "submit">Create account!</button>

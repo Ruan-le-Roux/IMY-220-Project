@@ -55,9 +55,7 @@ class App extends React.Component
     render()
     {
         return(
-            <RouterProvider router = {router}>
-
-            </RouterProvider>
+            <RouterProvider router={router}/>
         );
     }
 }

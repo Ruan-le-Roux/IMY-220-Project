@@ -2,6 +2,8 @@ import express from "express";
 
 import dotenv from 'dotenv';
 import { MongoClient } from 'mongodb';
+import path from 'path';
+
 
 dotenv.config();
 
@@ -17,7 +19,7 @@ const port = process.env.PORT || 3000;
 const app = express();
 
 //serve static page into public directory
-app.use(express.static("frontend/public"));
+
 
 app.use(express.json());
 
@@ -216,15 +218,6 @@ app.post("/api/users/add-user", async (req, res) => {
             surname,
             email,
             password,
-            profilePicture,
-            bio,
-            instagram,
-            facebook,
-            tiktok,
-            twitter,
-            playlists,
-            following,
-            followers
         } = req.body;
         
         // const newUser = req.body;
@@ -250,15 +243,15 @@ app.post("/api/users/add-user", async (req, res) => {
             surname,
             email,
             password,
-            profilePicture: profilePicture || null,
-            bio: bio || null,
-            instagram: instagram || null,
-            facebook: facebook || null,
-            tiktok: tiktok || null,
-            twitter: twitter || null,
-            playlists: playlists || null,
-            following: following || null,
-            followers: followers || null
+            profilePicture: '',
+            bio: '',
+            instagram: '',
+            facebook: '',
+            tiktok: '',
+            twitter: '',
+            playlists: [],
+            following: [],
+            followers: []
         }
 
         const result = await db.collection("users").insertOne(newUser);
@@ -275,6 +268,74 @@ app.post("/api/users/add-user", async (req, res) => {
         res.status(500).json({status: "failed", message: "Could not create new user"});
     }
 });
+// app.post("/api/users/add-user", async (req, res) => {
+//     try
+//     {
+//         const 
+//         {
+//             name,
+//             surname,
+//             email,
+//             password,
+//             profilePicture,
+//             bio,
+//             instagram,
+//             facebook,
+//             tiktok,
+//             twitter,
+//             playlists,
+//             following,
+//             followers
+//         } = req.body;
+        
+//         // const newUser = req.body;
+//         // console.log("req body: ", req.body.id);
+        
+//         if(!name || !surname || !email || !password)
+//         {
+//             return res.status(400).json({ status: "failed", message: "name, surname, email and password are required" });
+//         }
+
+//         const existingUser = await db.collection("users").findOne({email});
+
+//         if(existingUser)
+//         {
+//             return res.status(400).json({status: "failed", message: `User with email ${email} already in use`});
+//         }
+
+//         const id = await generateId();
+
+//         const newUser = {
+//             id,
+//             name,
+//             surname,
+//             email,
+//             password,
+//             profilePicture: profilePicture || null,
+//             bio: bio || null,
+//             instagram: instagram || null,
+//             facebook: facebook || null,
+//             tiktok: tiktok || null,
+//             twitter: twitter || null,
+//             playlists: playlists || null,
+//             following: following || null,
+//             followers: followers || null
+//         }
+
+//         const result = await db.collection("users").insertOne(newUser);
+
+//         res.status(201).json({
+//             status: "success",
+//             message: "User created successfully",
+//             data: newUser 
+//         });
+//     }
+//     catch(error)
+//     {
+//         console.error("Error while creating new user: ", error);
+//         res.status(500).json({status: "failed", message: "Could not create new user"});
+//     }
+// });
 
 //delete a user
 app.delete("/api/users/delete-user/:id", async (req, res) => {
@@ -1038,6 +1099,41 @@ app.put("/api/playlists/delete-comment/:id", async (req, res) => {
     }
 });
 
+//get all my playlists
+app.get("/api/playlists/my-playlists/:id", async (req, res) => {
+    const {id} = req.params;
+
+    try
+    {
+        const userExist = await existingUser(false, id);
+        // const existingUser = await existingUser(false, id); 
+        // const playlistExists = await existingPlaylist(id)
+
+        if(userExist === false)
+        {
+            return res.status(404).json({status: "failed", message: "User does not exist"});
+        }
+        
+        
+        // console.log("id: ", id);
+        const playlists = await db.collection("playlists").find({userId: id}).toArray();
+        // const playlists = await db.collection("playlists").find({userId: id});
+        
+        if(playlists === 0)
+        {
+            // console.log("osiaduhbfseioudfbiufgrbh");
+            return res.status(404).json({status: "failed", message: "No playlists found"});
+        }
+        // console.log("osiaduhbfseioudfbiufgrbh");
+        return res.status(200).json({status: "success", data: playlists});
+    }
+    catch(error)
+    {
+        console.error('Error getting all my playlists: ', error);
+        return res.status(500).json({status: "failed", message: "Could not get all my playlists"});
+    }
+});
+
 //songs
 //add a song
 app.post("/api/songs/add-song", async (req, res) => {
@@ -1183,6 +1279,12 @@ app.get("/api/songs/:id", async (req, res) => {
         console.error("Error getting song buy id: ", error);
         return res,status(500).json({status: "failed", message: "Could not find song by id"});
     }    
+});
+
+app.use(express.static("frontend/public"));
+
+app.get('*', (req, res) => {
+    res.sendFile(path.resolve('frontend/public/index.html'));
 });
 
 
