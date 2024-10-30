@@ -45,7 +45,7 @@ async function connectDatabase()
 connectDatabase();
 
 app.listen(port, () => {
-    console.log(`Listening on port: localhost:${port}`);
+    console.log(`Listening on port: https://localhost:${port}/`);
 });
 
 //functions
@@ -249,6 +249,7 @@ app.post("/api/users/add-user", async (req, res) => {
             facebook: '',
             tiktok: '',
             twitter: '',
+            active: true,
             playlists: [],
             following: [],
             followers: []
@@ -512,6 +513,13 @@ app.post("/api/users/login", async (req, res) => {
             return res.status(401).json({status: "failed", message: "password incorrect"});
         }
 
+        await db.collection('users').updateOne(
+            {email},
+            {$set: { active: true}}
+        );
+
+
+
         res.status(200).json({status: "success", message: "login successful", data: {id: user.id, name: user.name, email: user.email}});
     }
     catch(error)
@@ -520,6 +528,39 @@ app.post("/api/users/login", async (req, res) => {
         res.status(500).json({status: "failed", message: "could not login"});
     }
 });
+
+
+//logo out
+app.post("/api/users/logout/:id", async (req, res) => {
+
+    const { id } = req.params;
+    try
+    {
+        const user = await existingUser(false, id);
+
+        if(user === false)
+        {
+            return res.status(404).json({status: "failed", message: "User could not be found"});
+        }
+
+        const ret = await db.collection('users').updateOne(
+            {id: parseInt(id)},
+            {$set: { active: false}}
+        );
+
+        if(ret.modifiedCount === 0)
+        {
+            res.status(400).json({status: "failed", message: "could not logout user"});
+        }
+        res.status(200).json({status: "success", message: "logout successful"});
+    }
+    catch(error)
+    {
+        console.error("Error when logout ", error);
+        res.status(500).json({status: "failed", message: "could not logout"});
+    }
+});
+
 
 //add follower
 app.put("/api/users/add-follower/:id", async (req, res) => {
@@ -630,6 +671,7 @@ app.put("/api/users/unfollow/:id", async (req, res) => {
     }
 });
 
+
 //playlists
 //create playlists
 
@@ -654,6 +696,7 @@ app.post("/api/playlist/create-playlist", async (req, res) => {
         }
 
         const id = await generatePlaylistId();
+        const date = getDate();
 
         const newPlaylist = {
             id,
@@ -664,7 +707,9 @@ app.post("/api/playlist/create-playlist", async (req, res) => {
             coverImage: coverImage || '',
             hashTags: hashTags || '',
             songId: songId || [],
-            comments: comments || []
+            comments: comments || [],
+            createdAt: date,
+            updatedAt: date,
         };
 
         // console.log("newPlaylist: ", newPlaylist)
@@ -760,6 +805,8 @@ app.put("/api/playlists/update-playlist/:id", async (req, res) => {
         {
             updated.hashTags = hashTags;
         }
+
+        updated.updatedAt = getDate();
 
         const playlist = await db.collection("playlists").findOne({id: parseInt(id)});
 
@@ -890,7 +937,7 @@ app.put("/api/playlists/add-song/:id", async (req, res) => {
 
         if(!song)
         {
-            return res.status(400).json({status: "failed", message: "Song no longer exists can not  add it"});
+            return res.status(400).json({status: "failed", message: "Song no longer exists can not add it"});
         }
         
 
@@ -901,7 +948,13 @@ app.put("/api/playlists/add-song/:id", async (req, res) => {
             return res.status(401).json({status: "failed", message: "Only the owner can add songs to the playlist"});
         }
 
-        const result = await db.collection("playlists").updateOne({id: parseInt(id)}, {$push: {songId: parseInt(songId)}});
+        const result = await db.collection("playlists").updateOne(
+            {id: parseInt(id)}, 
+            {
+                $push: {songId: parseInt(songId)}, 
+                $set: {updatedAt: getDate()},
+            }
+        );
 
 
         if(result.modifiedCount === 1)
@@ -965,7 +1018,13 @@ app.put("/api/playlists/delete-song/:id", async (req, res) => {
         
 
 
-        const result = await db.collection("playlists").updateOne({id: parseInt(id)}, {$pull: {songId: parseInt(songId)}});
+        const result = await db.collection("playlists").updateOne(
+            {id: parseInt(id)},
+            {
+                $pull: {songId: parseInt(songId)},
+                $set: {updatedAt: getDate()},
+            } 
+        );
 
 
         if(result.modifiedCount === 1)
@@ -1116,10 +1175,10 @@ app.get("/api/playlists/my-playlists/:id", async (req, res) => {
         
         
         // console.log("id: ", id);
-        const playlists = await db.collection("playlists").find({userId: id}).toArray();
+        const playlists = await db.collection("playlists").find({userId: parseInt(id)}).toArray();
         // const playlists = await db.collection("playlists").find({userId: id});
         
-        if(playlists === 0)
+        if(playlists.length === 0)
         {
             // console.log("osiaduhbfseioudfbiufgrbh");
             return res.status(404).json({status: "failed", message: "No playlists found"});
@@ -1131,6 +1190,78 @@ app.get("/api/playlists/my-playlists/:id", async (req, res) => {
     {
         console.error('Error getting all my playlists: ', error);
         return res.status(500).json({status: "failed", message: "Could not get all my playlists"});
+    }
+});
+
+//get active friends playlists
+app.get("/api/playlists/active-playlists/:id", async (req, res) => {
+    const {id} = req.params;
+
+    try
+    {
+        const userExist = await existingUser(false, id);
+        // const existingUser = await existingUser(false, id); 
+        // const playlistExists = await existingPlaylist(id)
+
+        if(userExist === false)
+        {
+            return res.status(404).json({status: "failed", message: "User does not exist"});
+        }
+        
+        
+        // console.log("id: ", id);
+        // const playlists = await db.collection("playlists").find({userId: id});
+        const user = await db.collection('users').findOne({id: parseInt(id) });
+
+        // console.log("sjhgdvf: ", user);
+        
+        if(user && user.following && user.following.length > 0)
+        {
+            const friends = await db.collection('users').find({id: {$in: user.following }}).toArray();
+            // console.log(`friends: ${friends}`);
+            // console.log(`friends: ${JSON.stringify(friends, null, 2)}`);
+            
+            
+            const playlists = await Promise.all(
+                friends.flatMap( async (friend) => {
+                    const temp = await db.collection("playlists").find({ id: { $in: friend.playlists}}).toArray();
+    
+                    return temp.map((playlist) => ({
+                        owner: `${friend.name} ${friend.surname}`,
+                        ...playlist,
+                    }));
+                })                
+            );
+
+            const build = playlists.flat();
+
+            if(build.length === 0)
+            {
+                return res.status(404).json({status: "failed", message: "Friends do not have any playlists"});
+            }
+
+            // const allPlaylists = await db.collection("playlists").find({ id: { $in: playlists}}).toArray();
+
+            // const build = allPlaylists.map((temp) => {
+
+
+            // });
+
+            // console.log(allPlaylists);
+
+            return res.status(200).json({status: "success", data: build});
+        }
+        else if(user.following.length === 0)
+        {
+            return res.status(404).json({status: "failed", message: "User does not follow anyone"});
+        }
+
+        return res.status(500).json({status: "failed", message: "Could not find users following", data: `user: ${user}, following: ${user.following}, length: ${user.following.length}`});
+    }
+    catch(error)
+    {
+        console.error('Error getting all friends playlists: ', error);
+        return res.status(500).json({status: "failed", message: "Could not get users following playlists"});
     }
 });
 
@@ -1278,6 +1409,34 @@ app.get("/api/songs/:id", async (req, res) => {
     {
         console.error("Error getting song buy id: ", error);
         return res,status(500).json({status: "failed", message: "Could not find song by id"});
+    }    
+});
+
+//get all my songs
+app.get("/api/songs/my-songs/:id", async (req, res) => {
+    const {id} = req.params;
+    try
+    {
+        const exists = await existingUser(false, id);
+
+        if(exists === false)
+        {
+            return res.status(404).json({status: "failed", message: "User could not be found"});
+        }
+
+        const songs = await db.collection("songs").find({ownerId: parseInt(id)}).toArray();
+
+        if(songs.length === 0)
+        {
+            return res.status(404).json({status: "failed", message: "No songs found"});
+        }
+
+        return res.status(200).json({status: 'success', data: songs});
+    }
+    catch(error)
+    {
+        console.error("Error getting song buy id: ", error);
+        return res.status(500).json({status: "failed", message: "Could not find song by id"});
     }    
 });
 

@@ -13,7 +13,10 @@ class MyPlaylists extends React.Component
 
         this.state = {
             seeAll: false,
-            playLists: [],            
+            playlists: [],    
+            error: false,
+            errorMessage: '',
+
         };
 
         this.handleSeeAll = this.handleSeeAll.bind(this);
@@ -30,7 +33,7 @@ class MyPlaylists extends React.Component
         {
             const userId = localStorage.getItem('userId');
 
-            const res = await fetch(`/api/playlist/my-playlists/${userId}`);
+            const res = await fetch(`/api/playlists/my-playlists/${userId}`);
             const data = await res.json();
 
             if(res.ok)
@@ -40,6 +43,7 @@ class MyPlaylists extends React.Component
             else
             {
                 console.error(data.message);
+                this.setState({error: true, errorMessage: data.message});
             }
         }
         catch(error)
@@ -55,6 +59,16 @@ class MyPlaylists extends React.Component
             return <Navigate to = '/PlaylistPage/12'/>
         }
 
+        if(this.state.error === true)
+        {
+            return(
+                <div>
+                    <h1>My Playlists</h1>
+                    
+                    <p>{this.state.errorMessage}</p>
+                </div>
+            );
+        }
         
         return(
             <div>
@@ -65,19 +79,17 @@ class MyPlaylists extends React.Component
                 <div>
                     {this.state.playlists.length > 0 ? (
                         this.state.playlists.map((playlist) => (
-                            <section>
-                                <img src = {playlistPic} alt = "Picture of Playlist" title = "Picture of Playlist"/>
+                            <section key={playlist.id}>
+                                <img src={playlistPic} alt={`Cover of ${playlist.name}`} title="Picture of Playlist" />
                                 
                                 <div>
-                                    <h4>{playlist.data.name}</h4>
-
+                                    <h4>{playlist.name}</h4>
                                     <p>me</p>
                                 </div>
                             </section>
-
                         ))
                     ) : (
-                        <p>no playLists</p>
+                        <p>No playlists available.</p>  
                     )}
                 </div>
             </div>

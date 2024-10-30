@@ -4,7 +4,7 @@
   "description": "",
   "main": "frontend/src/server.js",
   "scripts": {
-    "build": "npx webpack && babel backend/server.js -d backend/dist",
+    "build": "babel backend/server.js -d backend/dist",
     "start": "npm run build && node backend/dist/server.js",
     "dev": "nodemon backend/server.js",
     "server": "npm backend/server.js",

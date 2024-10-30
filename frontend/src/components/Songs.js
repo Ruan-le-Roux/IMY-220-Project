@@ -12,6 +12,7 @@ class Songs extends React.Component
 
         this.state = {
             seeAll: false,
+            songs: [],
         };
 
         this.handleSeeAll = this.handleSeeAll.bind(this);
@@ -20,6 +21,48 @@ class Songs extends React.Component
     handleSeeAll()
     {
         this.setState({seeAll: true});        
+    }
+
+    async componentDidMount()
+    {
+        try
+        {
+            const userId = localStorage.getItem('userId');
+            const res = await fetch(`/api/songs/my-songs/${userId}`);
+            const data = await res.json();
+
+            if(res.ok)
+            {
+                this.setState({ songs: data.data });
+            }
+            else
+            {
+                console.error(data.message);
+            }
+        }
+        catch(error)
+        {
+            console.error('Error when getting my songs: ', error);
+        }
+    }
+
+    renderSongs()
+    {
+        if(this.state.songs.length === 0)
+        {
+            return <p>No songs found</p>
+        }
+
+        return this.state.songs.map((song) => (
+            <section key={song.id}>
+                <img src={albumPic} alt = "Picture of album" title = "Picture of album"/>
+
+                <div>
+                    <h4>{song.title}</h4>
+                    <p>{song.artist}</p>
+                </div>
+            </section>
+        ));
     }
 
 
@@ -37,15 +80,7 @@ class Songs extends React.Component
                 <button onClick = {this.handleSeeAll}>See All</button>
 
                 <div>
-                    <section>
-                        <img src = {albumPic} arc = "Picture of Album" title = "Picture of Album"/>
-                        
-                        <div>
-                            <h4>Song Name</h4>
-
-                            <p>Artist Name</p>
-                        </div>
-                    </section>
+                    {this.renderSongs()}                    
                 </div>
             </div>
         );

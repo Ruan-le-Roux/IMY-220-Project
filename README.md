@@ -30,4 +30,3 @@ mongodb+srv://u23782219:SoundSync123@soundsync-cluster.xmi82.mongodb.net/?retryW
 add this to use nodemon for dev:
 "type": "module"
 
-this is for D3
