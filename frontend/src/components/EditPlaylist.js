@@ -9,16 +9,48 @@ class EditPlaylist extends React.Component
         
         this.state = {
             submit: false,
+            id: this.props.id,
+            name: '',
+            category: '',
+            description: '',
+            coverImage: '',
+            
         };
 
 
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
+    
 
-    handleSubmit(e)
+
+    async handleSubmit(e)
     {
         e.preventDefault();
+        const { id } = this.state;
+
+        try
+        {
+            const userId = parseInt(localStorage.getItem('userId'), 10);
+            const res = await fetch(`/api/playlists/update-playlist/${id}`, {
+                method: 'PUT',
+                headers:
+                {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    "userId": userId,
+                    "name": ,
+                    "category": "pop",
+                    "description": "pop playlist",
+                    "coverImage": "image here",
+                    "hashTags": [
+                        "#pop", "#fun"
+                    ] 
+                })
+
+            });
+        }
 
         this.setState({submit: true});
 

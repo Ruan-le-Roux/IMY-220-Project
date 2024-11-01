@@ -36,7 +36,7 @@ const path = require("path");
 module.exports = {
     entry: "./frontend/src/index.js",
     output: {
-        path: path.resolve("frontend/public"),
+        path: path.resolve(__dirname, "frontend/public"),
         filename: "bundle.js",
         publicPath: '/'
     },

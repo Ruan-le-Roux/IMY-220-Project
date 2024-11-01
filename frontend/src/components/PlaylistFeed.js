@@ -1,5 +1,5 @@
 import React from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate, Link} from 'react-router-dom';
 
 import playlistPic from '../../public/assets/images/album-cover.png';
 import PlaylistComponent from './PlaylistComponent';
@@ -11,65 +11,101 @@ class PlaylistFeed extends React.Component
         super(props);
 
         this.state = {
-            open: false,
+            playlists: [],
+            type: this.props.type,
         };
-
-
-        this.handleSeeAll = this.handleSeeAll.bind(this);
     }
 
-    handleSeeAll()
+    async componentDidMount()
     {
-        this.setState({open: true});
+        const { type } = this.state;
+        try
+        {
+            if(type === 'a')
+            {
+                const userId = localStorage.getItem('userId');
+                const res = await fetch(`/api/playlists/active-playlists/${userId}`);
+                const data = await res.json();
+    
+                if(res.ok)
+                {
+                    this.setState({playlists: data.data});
+                }
+                else
+                {
+                    console.error(data.message);
+                }
+            }
+            else if( type === 'p')
+            {
+    
+            }
+        }
+        catch(error)
+        {
+            console.error("Error in api call: ", error);
+        }
+
     }
+
+    displayPlaylists()
+    {
+        const { type } = this.state;
+
+        if(type === 'a')
+        {
+            return (
+                <div>
+                    <h1>Activity Playlist Feed</h1>
+    
+                    {this.state.playlists.map((playlist) => (
+                        <section key={playlist.id} >
+                            <Link to={`/PlaylistPage/${playlist.id}`}>
+                                <img src = {playlistPic} alt = "Picture of Playlist" title = "Picture of Playlist"/>
+                                
+                                <div>
+                                    <h4>{playlist.name}</h4>
+        
+                                    <p>{playlist.owner}</p>
+                                </div>
+                            </Link>
+                        </section>
+                    ))}
+                </div>
+            );
+        }
+        else
+        {
+            return (
+                <div>
+                    <h1>Playlist Feed</h1>
+    
+                    {this.state.playlists.map((playlist) => (
+                        <section key={playlist.id} >
+                            <Link to={`/PlaylistPage/${playlist.id}`}>
+                                <img src = {playlistPic} alt = "Picture of Playlist" title = "Picture of Playlist"/>
+                                
+                                <div>
+                                    <h4>{playlist.name}</h4>
+        
+                                    <p>{playlist.owner}</p>
+                                </div>
+                            </Link>
+                        </section>
+                    ))}
+                </div>
+            );
+        }
+
+
+    }
+
 
 
     render()
     {
-        if(this.state.open)
-        {
-            return <PlaylistComponent/>
-        }
-
         return(
-            <div>
-                <h1>Playlist Feed</h1>
-
-                <div>
-                    <section>
-                        <button onClick = {this.handleSeeAll}>Open</button>
-                        <img src = {playlistPic} arc = "Picture of Playlist" title = "Picture of Playlist"/>
-                        
-                        <div>
-                            <h4>Playlist Name</h4>
-
-                            <p>By Name</p>
-                        </div>
-                    </section>
-
-                    <section>
-                        <button onClick = {this.handleSeeAll}>Open</button>
-                        <img src = {playlistPic} arc = "Picture of Playlist" title = "Picture of Playlist"/>
-                        
-                        <div>
-                            <h4>Playlist Name</h4>
-
-                            <p>By Name</p>
-                        </div>
-                    </section>
-
-                    <section>
-                        <button onClick = {this.handleSeeAll}>Open</button>
-                        <img src = {playlistPic} arc = "Picture of Playlist" title = "Picture of Playlist"/>
-                        
-                        <div>
-                            <h4>Playlist Name</h4>
-
-                            <p>By Name</p>
-                        </div>
-                    </section>
-                </div>
-            </div>
+            this.displayPlaylists()
         );
     }
 }

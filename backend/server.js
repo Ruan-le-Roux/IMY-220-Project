@@ -1,4 +1,6 @@
 import express from "express";
+import multer from "multer";
+// import path from 'path';
 
 import dotenv from 'dotenv';
 import { MongoClient } from 'mongodb';
@@ -22,6 +24,8 @@ const app = express();
 
 
 app.use(express.json());
+
+app.use(express.static(path.join(__dirname, 'frontend', 'public')));
 
 
 const client = new MongoClient(process.env.MONGO_URI);
@@ -189,6 +193,34 @@ function getDate()
 
     return `${day}/${month}/${year}`;
 }
+
+//store images on the server
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, path.join(__dirname, '../../frontend/public/assets/images'));
+    },
+    filename: (req, file, cb) => {
+        const suffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        cb(null, suffix + path.extname(file.originalname));
+    }
+});
+
+const fileFilter = (req, file, cb) => {
+    const filetypes = /jpeg|jpg|png|gif/; // Allowed file types
+    const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+    const mimetype = filetypes.test(file.mimetype);
+
+    if (extname && mimetype) {
+        return cb(null, true);
+    } else {
+        cb(new Error('Error: File type not supported!'));
+    }
+};
+
+const upload = multer({ 
+    storage: storage,
+    fileFilter: fileFilter
+});
 
 //endpoints
 
@@ -371,8 +403,17 @@ app.delete("/api/users/delete-user/:id", async (req, res) => {
 });
 
 //update user
-app.put("/api/users/update-user/:id", async (req, res) => {
+app.put("/api/users/update-user/:id", upload.single('profilePicture'), async (req, res) => {
     const { id } = req.params;
+
+    // if(!req.file)
+    // {
+    //     // console.log("s;oikdujrfoighbiouedsrhgfiusdehfgiusdhfu9hseiulghsiduhgiwsret");
+    //     return res.status(400).json({ status: "failed", message: "No file uploaded" });
+    // }
+
+    // console.log('Request Body:', req.body);
+    // console.log('Uploaded File:', req.file);
 
     const 
     {
@@ -380,7 +421,6 @@ app.put("/api/users/update-user/:id", async (req, res) => {
         surname,
         email,
         password,
-        profilePicture,
         bio,
         instagram,
         facebook,
@@ -418,9 +458,9 @@ app.put("/api/users/update-user/:id", async (req, res) => {
         {
             updated.password = password;
         }
-        if(profilePicture)
+        if(req.file)
         {
-            updated.profilePicture = profilePicture;
+            updated.profilePicture = `${req.protocol}://${req.get('host')}/assets/images/${req.file.filename}`;
         }
         if(bio)
         {
@@ -1224,7 +1264,7 @@ app.get("/api/playlists/active-playlists/:id", async (req, res) => {
             
             const playlists = await Promise.all(
                 friends.flatMap( async (friend) => {
-                    const temp = await db.collection("playlists").find({ id: { $in: friend.playlists}}).toArray();
+                    const temp = await db.collection("playlists").find({ id: { $in: friend.playlists}}).sort({updatedAt: 1}).toArray();
     
                     return temp.map((playlist) => ({
                         owner: `${friend.name} ${friend.surname}`,
@@ -1262,6 +1302,45 @@ app.get("/api/playlists/active-playlists/:id", async (req, res) => {
     {
         console.error('Error getting all friends playlists: ', error);
         return res.status(500).json({status: "failed", message: "Could not get users following playlists"});
+    }
+});
+
+//get songs in playlist
+app.get("/api/playlists/get-songs/:id", async (req, res) => {
+    const {id} = req.params;
+
+    try
+    {
+        const playlistExists = await existingPlaylist(id);
+
+        if(playlistExists === false)
+        {
+            return res.status(404).json({status: "failed", message: "Playlist does not exist"});
+        }
+
+        const playlist = await db.collection('playlists').findOne({id: parseInt(id)});
+
+        if(playlist.songId.length > 0)
+        {
+            // let songs = [];
+            const songs = await Promise.all(
+                playlist.songId.map(async (song) => {
+                    // console.log(`song: ${song}`);
+                    return await db.collection('songs').findOne({id: parseInt(song)});
+                })
+            ); 
+
+            // console.log(`songs: ${songs}`);
+
+            return res.status(200).json({status: "success", data: songs});
+        }
+
+        return res.status(404).json({status: "failed", message: "Playlist has no songs"});
+    }
+    catch(error)
+    {
+        console.error("Error getting all songs in a playlist: ", error);
+        res.status(500).json({status: "failed", message: "Could not get all songs in a playlist"});
     }
 });
 
@@ -1440,11 +1519,15 @@ app.get("/api/songs/my-songs/:id", async (req, res) => {
     }    
 });
 
-app.use(express.static("frontend/public"));
+// app.use(express.static("frontend/public"));
 
 app.get('*', (req, res) => {
-    res.sendFile(path.resolve('frontend/public/index.html'));
+    res.sendFile(path.resolve(__dirname, 'frontend', 'public', 'index.html'));
 });
+
+// app.get('*', (req, res) => {
+//     res.sendFile(path.resolve('frontend/public/index.html'));
+// });
 
 
 

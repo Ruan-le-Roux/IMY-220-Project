@@ -1,7 +1,8 @@
 import React from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate, Link } from 'react-router-dom';
 
-import playlistPic from '../../public/assets/images/album-cover.png'
+import playlistPic from '../../public/assets/images/album-cover.png';
+import PlaylistComponent from './PlaylistComponent';
 
 class Activity extends React.Component
 {
@@ -51,17 +52,27 @@ class Activity extends React.Component
 
     }
 
-    displayPlaylists()
-    {
-        return this.state.playlists.map((playlist) => (
-            <section key={playlist.id}>
-                <img src = {playlistPic} alt = "Picture of Playlist" title = "Picture of Playlist"/>
-                
-                <div>
-                    <h4>{playlist.name}</h4>
+    // handleClick(id)
+    // {
+    //     return <Navigate to={`/PlaylistPage/${id}`}/>
+    // }
 
-                    <p>{playlist.owner}</p>
-                </div>
+    displayPlaylists()
+    {        
+        const limitedPlaylists = this.state.playlists.slice(0, 5);
+
+        return limitedPlaylists.map((playlist) => (
+            <section key={playlist.id}>
+                <Link to={`/PlaylistPage/${playlist.id}`}>
+                    <img src = {playlistPic} alt = "Picture of Playlist" title = "Picture of Playlist"/>
+                    
+                    <div>
+                        <h4>{playlist.name}</h4>
+
+                        <p>{playlist.owner}</p>
+                    </div>
+                
+                </Link>
             </section>
         ));
     }
@@ -72,7 +83,8 @@ class Activity extends React.Component
     {
         if(this.state.seeAll)
         {
-            return <Navigate to = '/PlaylistFeedPage'/>
+            const temp = 'a';
+            return <Navigate to = {`/PlaylistFeedPage/${temp}`}/>
         }
 
         if(this.state.error === true)

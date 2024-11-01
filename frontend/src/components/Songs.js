@@ -75,7 +75,7 @@ class Songs extends React.Component
         }
         return(
             <div>
-                <h1>Songs</h1>
+                <h1>My Songs</h1>
 
                 <button onClick = {this.handleSeeAll}>See All</button>
 

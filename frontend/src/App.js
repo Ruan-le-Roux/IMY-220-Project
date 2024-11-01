@@ -29,7 +29,7 @@ const router = createBrowserRouter([
         element: <Home/>
     },
     {
-        path: '/PlaylistFeedPage',
+        path: '/PlaylistFeedPage/:type',
         element: <PlaylistFeedPage/>
     },
     {
