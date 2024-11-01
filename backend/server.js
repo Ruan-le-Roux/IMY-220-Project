@@ -241,7 +241,7 @@ app.get("/api/users", async (req, res) => {
 
 
 //add new user
-app.post("/api/users/add-user", async (req, res) => {
+app.post("/api/users/add-user", upload.single('profilePicture'), async (req, res) => {
     try
     {
         const 
@@ -275,7 +275,7 @@ app.post("/api/users/add-user", async (req, res) => {
             surname,
             email,
             password,
-            profilePicture: '',
+            profilePicture: req.file ? req.file.path : 'http://localhost:3000/assets/images/profile-pic.png',
             bio: '',
             instagram: '',
             facebook: '',
@@ -715,10 +715,10 @@ app.put("/api/users/unfollow/:id", async (req, res) => {
 //playlists
 //create playlists
 
-app.post("/api/playlist/create-playlist", async (req, res) => {
+app.post("/api/playlist/create-playlist", upload.single('coverImage'), async (req, res) => {
     try
     {
-        const { userId, name, category, description, coverImage, hashTags, songId, comments } = req.body;
+        const { userId, name, category, description, hashTags, songId, comments } = req.body;
 
         // console.log("userId: ", userId, "name: ", name);
         // console.log("req body: ", req.body);
@@ -744,7 +744,7 @@ app.post("/api/playlist/create-playlist", async (req, res) => {
             name: name || `playlist ${id}`,
             category: category || '',
             description: description || '',
-            coverImage: coverImage || '',
+            coverImage: req.file ? `http://localhost:3000/assets/images/${req.file.filename}` : 'http://localhost:3000/assets/images/album-cover.png',
             hashTags: hashTags || '',
             songId: songId || [],
             comments: comments || [],
@@ -794,7 +794,7 @@ app.get("/api/playlists", async (req, res) => {
 });
 
 //update playlist
-app.put("/api/playlists/update-playlist/:id", async (req, res) => {
+app.put("/api/playlists/update-playlist/:id", upload.single('coverImage'), async (req, res) => {
     const {id} = req.params;
     const 
     {
@@ -802,7 +802,6 @@ app.put("/api/playlists/update-playlist/:id", async (req, res) => {
         name,
         category,
         description,
-        coverImage,
         hashTags,
     } = req.body;
     
@@ -837,9 +836,9 @@ app.put("/api/playlists/update-playlist/:id", async (req, res) => {
         {
             updated.description = description;
         }
-        if(coverImage)
+        if(req.file)
         {
-            updated.coverImage = coverImage;
+            updated.coverImage = `http://localhost:3000/assets/images/${req.file.filename}`;
         }
         if(hashTags)
         {
@@ -1519,15 +1518,15 @@ app.get("/api/songs/my-songs/:id", async (req, res) => {
     }    
 });
 
-// app.use(express.static("frontend/public"));
-
-app.get('*', (req, res) => {
-    res.sendFile(path.resolve(__dirname, 'frontend', 'public', 'index.html'));
-});
+app.use(express.static("frontend/public"));
 
 // app.get('*', (req, res) => {
-//     res.sendFile(path.resolve('frontend/public/index.html'));
+//     res.sendFile(path.resolve(__dirname, 'frontend', 'public', 'index.html'));
 // });
+
+app.get('*', (req, res) => {
+    res.sendFile(path.resolve('frontend/public/index.html'));
+});
 
 
 

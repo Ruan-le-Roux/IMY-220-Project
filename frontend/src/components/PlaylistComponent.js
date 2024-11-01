@@ -108,6 +108,26 @@ class PlaylistComponent extends React.Component
         this.setState({addSong: true});
     }
 
+    displayEditing()
+    {
+        const userId = localStorage.getItem('userId');
+        const {playlist} = this.state;
+        
+        if(userId === playlist.userId)
+        {
+            return(
+                <div>
+                    <button onClick = {this.handleEdit}>Edit</button>
+                    <button onClick = {this.handleDelete}>Delete</button>
+                    <button onClick = {this.addSong}><FontAwesomeIcon icon={faPlus} />Add Song</button>
+                </div>
+
+            );
+
+        }
+
+    }
+
     displayPlaylist()
     {
         const { playlist, owner } = this.state;
@@ -131,9 +151,7 @@ class PlaylistComponent extends React.Component
 
                 <p>{playlist.description}</p>
 
-                <button onClick = {this.handleEdit}>Edit</button>
-                <button onClick = {this.handleDelete}>Delete</button>
-                <button onClick = {this.addSong}><FontAwesomeIcon icon={faPlus} />Add Song</button>
+                {this.displayEditing()}
 
                 <hr/>
 

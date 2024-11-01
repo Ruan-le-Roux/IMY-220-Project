@@ -454,7 +454,7 @@ app.get("/api/users", /*#__PURE__*/function () {
 }());
 
 //add new user
-app.post("/api/users/add-user", /*#__PURE__*/function () {
+app.post("/api/users/add-user", upload.single('profilePicture'), /*#__PURE__*/function () {
   var _ref2 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee2(req, res) {
     var _req$body, name, surname, email, password, _existingUser2, id, newUser, result;
     return _regeneratorRuntime().wrap(function _callee2$(_context2) {
@@ -497,7 +497,7 @@ app.post("/api/users/add-user", /*#__PURE__*/function () {
             surname: surname,
             email: email,
             password: password,
-            profilePicture: '',
+            profilePicture: req.file ? req.file.path : 'http://localhost:3000/assets/images/profile-pic.png',
             bio: '',
             instagram: '',
             facebook: '',
@@ -1189,14 +1189,14 @@ app.put("/api/users/unfollow/:id", /*#__PURE__*/function () {
 //playlists
 //create playlists
 
-app.post("/api/playlist/create-playlist", /*#__PURE__*/function () {
+app.post("/api/playlist/create-playlist", upload.single('coverImage'), /*#__PURE__*/function () {
   var _ref10 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee10(req, res) {
-    var _req$body4, userId, name, category, description, coverImage, hashTags, songId, comments, _existingUser3, id, date, newPlaylist, result, updateUsers;
+    var _req$body4, userId, name, category, description, hashTags, songId, comments, _existingUser3, id, date, newPlaylist, result, updateUsers;
     return _regeneratorRuntime().wrap(function _callee10$(_context10) {
       while (1) switch (_context10.prev = _context10.next) {
         case 0:
           _context10.prev = 0;
-          _req$body4 = req.body, userId = _req$body4.userId, name = _req$body4.name, category = _req$body4.category, description = _req$body4.description, coverImage = _req$body4.coverImage, hashTags = _req$body4.hashTags, songId = _req$body4.songId, comments = _req$body4.comments; // console.log("userId: ", userId, "name: ", name);
+          _req$body4 = req.body, userId = _req$body4.userId, name = _req$body4.name, category = _req$body4.category, description = _req$body4.description, hashTags = _req$body4.hashTags, songId = _req$body4.songId, comments = _req$body4.comments; // console.log("userId: ", userId, "name: ", name);
           // console.log("req body: ", req.body);
           if (!(!userId || !category)) {
             _context10.next = 4;
@@ -1233,7 +1233,7 @@ app.post("/api/playlist/create-playlist", /*#__PURE__*/function () {
             name: name || "playlist ".concat(id),
             category: category || '',
             description: description || '',
-            coverImage: coverImage || '',
+            coverImage: req.file ? "http://localhost:3000/assets/images/".concat(req.file.filename) : 'http://localhost:3000/assets/images/album-cover.png',
             hashTags: hashTags || '',
             songId: songId || [],
             comments: comments || [],
@@ -1329,14 +1329,14 @@ app.get("/api/playlists", /*#__PURE__*/function () {
 }());
 
 //update playlist
-app.put("/api/playlists/update-playlist/:id", /*#__PURE__*/function () {
+app.put("/api/playlists/update-playlist/:id", upload.single('coverImage'), /*#__PURE__*/function () {
   var _ref12 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee12(req, res) {
-    var id, _req$body5, userId, name, category, description, coverImage, hashTags, exists, userExists, updated, playlist;
+    var id, _req$body5, userId, name, category, description, hashTags, exists, userExists, updated, playlist;
     return _regeneratorRuntime().wrap(function _callee12$(_context12) {
       while (1) switch (_context12.prev = _context12.next) {
         case 0:
           id = req.params.id;
-          _req$body5 = req.body, userId = _req$body5.userId, name = _req$body5.name, category = _req$body5.category, description = _req$body5.description, coverImage = _req$body5.coverImage, hashTags = _req$body5.hashTags;
+          _req$body5 = req.body, userId = _req$body5.userId, name = _req$body5.name, category = _req$body5.category, description = _req$body5.description, hashTags = _req$body5.hashTags;
           _context12.prev = 2;
           _context12.next = 5;
           return existingPlaylist(id);
@@ -1374,8 +1374,8 @@ app.put("/api/playlists/update-playlist/:id", /*#__PURE__*/function () {
           if (description) {
             updated.description = description;
           }
-          if (coverImage) {
-            updated.coverImage = coverImage;
+          if (req.file) {
+            updated.coverImage = "http://localhost:3000/assets/images/".concat(req.file.filename);
           }
           if (hashTags) {
             updated.hashTags = hashTags;
@@ -2651,16 +2651,15 @@ app.get("/api/songs/my-songs/:id", /*#__PURE__*/function () {
     return _ref28.apply(this, arguments);
   };
 }());
-
-// app.use(express.static("frontend/public"));
-
-app.get('*', function (req, res) {
-  res.sendFile(_path["default"].resolve(__dirname, 'frontend', 'public', 'index.html'));
-});
+app.use(_express["default"]["static"]("frontend/public"));
 
 // app.get('*', (req, res) => {
-//     res.sendFile(path.resolve('frontend/public/index.html'));
+//     res.sendFile(path.resolve(__dirname, 'frontend', 'public', 'index.html'));
 // });
+
+app.get('*', function (req, res) {
+  res.sendFile(_path["default"].resolve('frontend/public/index.html'));
+});
 
 //docker build -t image .
 

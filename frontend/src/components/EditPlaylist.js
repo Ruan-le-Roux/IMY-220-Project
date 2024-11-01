@@ -14,7 +14,7 @@ class EditPlaylist extends React.Component
             category: '',
             description: '',
             coverImage: '',
-            
+            hashTags: [],
         };
 
 
@@ -27,7 +27,7 @@ class EditPlaylist extends React.Component
     async handleSubmit(e)
     {
         e.preventDefault();
-        const { id } = this.state;
+        const { id, name, category, description, coverImage, hashTags } = this.state;
 
         try
         {
@@ -40,21 +40,31 @@ class EditPlaylist extends React.Component
                 },
                 body: JSON.stringify({
                     "userId": userId,
-                    "name": ,
-                    "category": "pop",
-                    "description": "pop playlist",
-                    "coverImage": "image here",
-                    "hashTags": [
-                        "#pop", "#fun"
-                    ] 
+                    "name": name,
+                    "category": category,
+                    "description": description,
+                    "coverImage": coverImage,
+                    "hashTags": hashTags, 
                 })
-
             });
+            const message = await res.json();
+
+            if(res.ok)
+            {
+                window.alert("Playlist updated successfully");
+                this.setState({submit: true});
+            }
+            else
+            {
+                console.error(message.message);
+                window.alert("Could not update playlists");
+            }
         }
-
-        this.setState({submit: true});
-
-        //fix with router
+        catch(error)
+        {
+            console.error("Error when updating playlist", error);
+            window.alert("Could not update playlist");            
+        }
     }
 
     render()
@@ -62,7 +72,7 @@ class EditPlaylist extends React.Component
 
         if(this.state.submit)
         {
-            return <PlaylistComponent/>;
+            return <PlaylistComponent playlistId={this.state.id}/>;
         }
         return(
             <div>
