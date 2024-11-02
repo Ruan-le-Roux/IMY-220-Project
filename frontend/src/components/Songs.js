@@ -53,9 +53,11 @@ class Songs extends React.Component
             return <p>No songs found</p>
         }
 
-        return this.state.songs.map((song) => (
+        const limitedSongs = this.state.songs.slice(0, 5);
+
+        return limitedSongs.map((song) => (
             <section key={song.id}>
-                <img src={albumPic} alt = "Picture of album" title = "Picture of album"/>
+                <iframe src={song.embedUrl} width="300" height="380" frameBorder="0" allowtransparency="true" allow="encrypted-media"></iframe>
 
                 <div>
                     <h4>{song.title}</h4>

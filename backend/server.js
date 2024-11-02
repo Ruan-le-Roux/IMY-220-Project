@@ -849,7 +849,7 @@ app.put("/api/playlists/update-playlist/:id", upload.single('coverImage'), async
 
         const playlist = await db.collection("playlists").findOne({id: parseInt(id)});
 
-        if(playlist.userId !== userId)
+        if(playlist.userId != userId)
         {
             return res.status(401).json({status: "failed", message: "Only owner can edit playlist"});
         }
@@ -866,15 +866,16 @@ app.put("/api/playlists/update-playlist/:id", upload.single('coverImage'), async
 });
 
 //delete playlist
-app.delete("/api/playlists/delete-playlist/:id", async (req, res) => {
-    const {id} = req.params;
+app.delete("/api/playlists/delete-playlist/:id/:userId", async (req, res) => {
+    const {id, userId} = req.params;
 
-    const {userId} = req.body;
+    // const {userId} = req.body;
 
     try
     {
+        // console.log("user: ", userId);
         const exists = await existingPlaylist(id);
-        const userExists = await existingUser(false, userId);
+        const userExists = await existingUser(false, parseInt(userId));
 
         if(exists === false)
         {
@@ -886,9 +887,9 @@ app.delete("/api/playlists/delete-playlist/:id", async (req, res) => {
             return res.status(404).json({status: "failed", message: `User does not exist`});
         }
 
-        const playlist = await db.collection("playlists").findOne({id: parseInt(userId)});
+        const playlist = await db.collection("playlists").findOne({id: parseInt(id)});
 
-        if(playlist.userId !== userId)
+        if(playlist.userId !== parseInt(userId))
         {
             return res.status(401).json({status: "failed", message: "Only owner can delete playlist"});
         }
@@ -938,79 +939,73 @@ app.get("/api/playlists/:id", async (req, res) => {
 });
 
 //add song
-app.put("/api/playlists/add-song/:id", async (req, res) => {
+app.put("/api/playlists/add-song/:id/:userId", async (req, res) => {
+    const { id, userId } = req.params;
+    const { songId } = req.body; // Assuming songId is an array
 
-    const {id} = req.params;
-
-    const { songId, userId } = req.body;
-
-    try
-    {
+    try {
+        // Check if the playlist exists
         const playlistExists = await existingPlaylist(id);
-        const songExists = await existingSong(songId);
+        if (!playlistExists) {
+            return res.status(404).json({ status: "failed", message: `Playlist with id ${id} does not exist` });
+        }
+
+        // Check if the user exists
         const userExists = await existingUser(false, userId);
-
-        if(songExists === false)
-        {
-            return res.status(404).json({status: "failed", message: `Song with id ${songId} does not exist`});
+        if (!userExists) {
+            return res.status(404).json({ status: "failed", message: `User does not exist` });
         }
 
-        if(playlistExists === false)
-        {
-            return res.status(404).json({status: "failed", message: `Playlist with id ${id} does not exist`});
+        // Check if all songs exist
+        const songExistsResults = await Promise.all(songId.map(song => existingSong(song)));
+        const allSongsExist = songExistsResults.every(Boolean); // Check if all results are true
+
+        if (!allSongsExist) {
+            return res.status(404).json({ status: "failed", message: `One or more songs do not exist` });
         }
 
-        if(userExists === false)
-        {
-            return res.status(404).json({status: "failed", message: `User does not exist`});
+        // Check if any of the songs are already in the playlist
+        const existingSongs = await Promise.all(songId.map(song => songInPlaylist(song, id)));
+        const anySongExistsInPlaylist = existingSongs.some(Boolean); // Check if any song is already in the playlist
+
+        if (anySongExistsInPlaylist) {
+            return res.status(409).json({ status: "failed", message: "One or more songs are already in the playlist" });
         }
 
-        const exists = await songInPlaylist(songId, id);
+        // Proceed to add songs to the playlist
+        for (const song of songId) {
+            const songDetails = await db.collection("songs").findOne({ id: parseInt(song), deleted: false });
 
-        if(exists === true)
-        {
-            return res.status(409).json({status: "failed", message: "Song already in playlist"});
-        }
-
-        const song = await db.collection("songs").findOne({id: parseInt(songId), deleted: false});
-
-        if(!song)
-        {
-            return res.status(400).json({status: "failed", message: "Song no longer exists can not add it"});
-        }
-        
-
-        const playlist = await db.collection("playlists").findOne({id: parseInt(id)});
-
-        if(playlist.userId !== userId)
-        {
-            return res.status(401).json({status: "failed", message: "Only the owner can add songs to the playlist"});
-        }
-
-        const result = await db.collection("playlists").updateOne(
-            {id: parseInt(id)}, 
-            {
-                $push: {songId: parseInt(songId)}, 
-                $set: {updatedAt: getDate()},
+            if (!songDetails) {
+                return res.status(400).json({ status: "failed", message: "Song no longer exists, cannot add it" });
             }
-        );
 
+            const playlist = await db.collection("playlists").findOne({ id: parseInt(id) });
 
-        if(result.modifiedCount === 1)
-        {
-            return res.status(200).json({status: "success", message: "Added song to playlist"});
+            if (parseInt(playlist.userId) !== parseInt(userId)) {
+                return res.status(401).json({ status: "failed", message: "Only the owner can add songs to the playlist"});
+            }
+
+            const result = await db.collection("playlists").updateOne(
+                { id: parseInt(id) },
+                {
+                    $push: { songId: parseInt(song) },
+                    $set: { updatedAt: getDate() },
+                }
+            );
+
+            if (result.modifiedCount !== 1) {
+                return res.status(500).json({ status: "failed", message: "Could not add song to playlist" });
+            }
         }
-        else
-        {
-            return res.status(500).json({status: "failed", message: "Could not add song to playlist"});
-        }
-    }
-    catch(error)
-    {
+
+        return res.status(200).json({ status: "success", message: "Added songs to playlist" });
+    } catch (error) {
         console.error("Error when adding song to playlist: ", error);
-        return res.status(500).json({status: "failed", message: "Could not add song to playlist"});
+        return res.status(500).json({ status: "failed", message: "Could not add song to playlist" });
     }
 });
+
 
 //delete song from playlist
 app.put("/api/playlists/delete-song/:id", async (req, res) => {
@@ -1340,6 +1335,45 @@ app.get("/api/playlists/get-songs/:id", async (req, res) => {
     {
         console.error("Error getting all songs in a playlist: ", error);
         res.status(500).json({status: "failed", message: "Could not get all songs in a playlist"});
+    }
+});
+
+//is owner of playlist
+app.get('/api/playlists/is-owner/:playlistId/:userId', async (req,res) => {
+    const { playlistId, userId } = req.params;
+
+    try
+    {
+        // const existingPlaylist = await existingPlaylist(playlistId);
+        const playlist = await db.collection('playlists').findOne({ id: parseInt(playlistId) });
+        
+        const userExists = await db.collection('users').findOne({ id: parseInt(userId) });
+
+        
+        if(!userExists)
+        {
+            return res.status(404).json({status: "failed", message: "Could not find user"});
+        }
+
+        if(!playlist)
+        {
+            return res.status(404).json({status: "failed", message: "Could not find playlist"});
+        }
+
+        // const playlist = await db.collection('playlists').findOne({id: parseInt(playlistId)});
+        // console.log("playlist: ", playlist.userId, "user: ", userId);
+        
+        if(playlist.userId == userId)
+        {
+            return res.status(200).json({status: "success", message: "The user is the owner of the playlist"});
+        }
+
+        return res.status(401).json({status: "failed", message: "User is not the owner of the playlist"}); 
+    }
+    catch(error)
+    {
+        console.error("Error while checking if user is owner of playlist", error);
+        return res.status(500).json({status: "failed", message: "Could not check if user is the owner of the playlist"});
     }
 });
 

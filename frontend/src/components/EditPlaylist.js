@@ -13,12 +13,27 @@ class EditPlaylist extends React.Component
             name: '',
             category: '',
             description: '',
-            coverImage: '',
-            hashTags: [],
+            coverImage: null,
+            hashTags: '',
         };
 
 
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleChange = this.handleChange.bind(this);
+        this.handleFileChange = this.handleFileChange.bind(this);
+    }
+
+    handleChange(event)
+    {
+        const { name, value } = event.target;
+        this.setState({ [name]: value });
+
+    }
+
+    handleFileChange(event)
+    {
+        const file = event.target.files[0];
+        this.setState({ coverImage: file });
     }
 
     
@@ -29,23 +44,27 @@ class EditPlaylist extends React.Component
         e.preventDefault();
         const { id, name, category, description, coverImage, hashTags } = this.state;
 
+        const formData = new FormData();
+        const userId = parseInt(localStorage.getItem('userId'), 10);
+        formData.append('userId', userId);
+        formData.append('name', name);
+        formData.append('category', category);
+        formData.append('description', description);
+        if (coverImage) {
+        formData.append('coverImage', coverImage);
+        }
+        formData.append('hashTags', JSON.stringify(hashTags)); // Send as JSON
+
         try
         {
             const userId = parseInt(localStorage.getItem('userId'), 10);
             const res = await fetch(`/api/playlists/update-playlist/${id}`, {
                 method: 'PUT',
-                headers:
-                {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    "userId": userId,
-                    "name": name,
-                    "category": category,
-                    "description": description,
-                    "coverImage": coverImage,
-                    "hashTags": hashTags, 
-                })
+                // headers:
+                // {
+                //     'Content-Type': 'application/json'
+                // },
+                body: formData 
             });
             const message = await res.json();
 
@@ -70,6 +89,9 @@ class EditPlaylist extends React.Component
     render()
     {
 
+        const { name, category, description, hashTags, submit } = this.state;
+
+
         if(this.state.submit)
         {
             return <PlaylistComponent playlistId={this.state.id}/>;
@@ -81,31 +103,31 @@ class EditPlaylist extends React.Component
                     <label>
                         Name:
 
-                        <input type = 'text' placeholder = 'playlist name'/>
+                        <input name='name' type = 'text' placeholder = 'playlist name' value={name} onChange={this.handleChange}/>
                     </label>
 
                     <label>
                         Category:
 
-                        <input type = 'text' placeholder = 'Category'/>
+                        <input name='category' type = 'text' placeholder = 'Category' value={category} onChange={this.handleChange}/>
                     </label>
 
                     <label>
                         Short description:
 
-                        <textarea name = 'description' placeholder = 'Description' ></textarea>
+                        <textarea name = 'description' placeholder = 'Description' value={description} onChange={this.handleChange}></textarea>
                     </label>
 
                     <label>
                         Cover Image:
 
-                        <input type = 'file' />
+                        <input name='coverImage' type = 'file' onChange={this.handleFileChange}/>
                     </label>
 
                     <label>
                         Hashtags:
 
-                        <textarea name = 'hashtags' placeholder = '#example'></textarea>
+                        <textarea  name='hashTags' placeholder = 'example' value={hashTags} onChange={this.handleChange}></textarea>
                     </label>
 
                     <button type = 'submit'>Make changes</button>

@@ -1,7 +1,7 @@
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
-import { Navigate } from 'react-router-dom';
+import { Navigate, Link } from 'react-router-dom';
 
 import Nav from './Nav';
 import DisplaySongs from './DisplaySongs';
@@ -23,8 +23,11 @@ class PlaylistComponent extends React.Component
             showAddComment: false,
             addSong: false,
             id: this.props.playlistId,
-            playlist: '',
+            playlist: {},
             owner: '',
+            isOwner: false,
+            home: false,
+
         };
 
         this.handleDelete = this.handleDelete.bind(this);
@@ -38,15 +41,18 @@ class PlaylistComponent extends React.Component
     {
         try
         {
+            console.log(`playlist Id: ${this.state.id}`);
             const userId = localStorage.getItem('userId');
             const res = await fetch(`/api/playlists/${this.state.id}`);
             const data = await res.json();
     
             if(res.ok)
             {
+                // this.setState({playlist: data.data});
                 this.setState({playlist: data.data}, () => {
                     this.getOwner();
-
+                    this.checkOwner(userId);
+                    
                 });
             }
             else
@@ -64,7 +70,7 @@ class PlaylistComponent extends React.Component
     async getOwner()
     {
         const {playlist} = this.state;
-        // console.log("isapidfhjvb: ", playlist);
+        console.log("isapidfhjvb: ", playlist);
         try
         {
             const res = await fetch(`/api/users/${playlist.userId}`);
@@ -87,9 +93,37 @@ class PlaylistComponent extends React.Component
         }
 
     }
+
+    async checkOwner(userId)
+    {
+        console.log(`userId: ${userId} playlist: ${this.state.id}`);
+        try
+        {
+            console.log(`userId: ${userId} playlist: ${this.state.id}`);
+            const res = await fetch(`/api/playlists/is-owner/${this.state.id}/${userId}`);
+            const data = await res.json();
+    
+            console.log(`userId: ${userId} playlist: ${this.state.playlist.userId}`);
+    
+            if(res.ok)
+            {
+                this.setState({isOwner: true});
+            }
+            else
+            {
+                console.error(data.message);
+            }
+        }
+        catch(error)
+        {
+            console.error("Error when checking is user is owner: ", error);
+        }
+    }
+
     handleDelete()
     {
         this.setState({delete: true});
+        this.deletePlaylist();
     }
 
     handleEdit()
@@ -108,34 +142,48 @@ class PlaylistComponent extends React.Component
         this.setState({addSong: true});
     }
 
-    displayEditing()
+    async displayEditing()
     {
-        const userId = localStorage.getItem('userId');
-        const {playlist} = this.state;
-        
-        if(userId === playlist.userId)
+        try
         {
-            return(
-                <div>
-                    <button onClick = {this.handleEdit}>Edit</button>
-                    <button onClick = {this.handleDelete}>Delete</button>
-                    <button onClick = {this.addSong}><FontAwesomeIcon icon={faPlus} />Add Song</button>
-                </div>
-
-            );
-
+            const userId = localStorage.getItem('userId');
+            const {playlist} = this.state;
+    
+            const res = await fetch(`/api/playlists/is-owner/${this.state.id}/${userId}`);
+            const data = await res.json();
+    
+            console.log(`userId: ${userId} playlist: ${playlist.userId}`);
+    
+            if(res.ok)
+            {
+                return(
+                    <div>
+                        <button onClick = {this.handleEdit}>Edit</button>
+                        <button onClick = {this.handleDelete}>Delete</button>
+                        <button onClick = {this.addSong}><FontAwesomeIcon icon={faPlus} />Add Song</button>
+                    </div>
+        
+                );
+            }
+            else
+            {
+                console.error(data.message);
+            }
         }
-
+        catch(error)
+        {
+            console.error("Error when checking is user is owner: ", error);
+        }
     }
 
     displayPlaylist()
     {
-        const { playlist, owner } = this.state;
+        const { playlist, owner, isOwner } = this.state;
 
         return(
 
             <main>
-                <img src = {albumPic} alt = 'Album cover' title = 'Album cover'/>
+                <img src = {playlist.coverImage} alt = 'Album cover' title = 'Album cover'/>
 
                 <h1>{playlist.name}</h1>
 
@@ -151,7 +199,15 @@ class PlaylistComponent extends React.Component
 
                 <p>{playlist.description}</p>
 
-                {this.displayEditing()}
+                {isOwner && (
+                    <div>
+                        <button onClick={this.handleEdit}>Edit</button>
+                        <button onClick={this.handleDelete}>Delete</button>
+                        <button onClick={this.addSong}>
+                        <FontAwesomeIcon icon={faPlus} /> Add Song
+                        </button>
+                    </div>
+                )}
 
                 <hr/>
 
@@ -184,24 +240,49 @@ class PlaylistComponent extends React.Component
                 </div>
             </main>
         );
+    }
 
+    async deletePlaylist()
+    {
+        try
+        {
+            const userId = parseInt(localStorage.getItem('userId'));
+            const res = await fetch(`/api/playlists/delete-playlist/${this.state.id}/${userId}`, {
+                method: 'DELETE'
+            });
+            const data = await res.json();
 
-
+            if(res.ok)
+            {
+                window.alert("Playlists deleted");
+                this.setState({home: true});
+                
+            }
+            else if(res.status === 401)
+            {
+                window.alert("Only a owner can delete a playlist");
+            }
+            else
+            {
+                window.alert("Playlist could not be deleted");
+                console.error(data.message);
+            }
+        }
+        catch(error)
+        {
+            console.error("Error when deleting playlist: ", error);
+            window.alert("Playlist could not be deleted");
+        }
     }
 
 
     render()
     {
-        const { edit, showAddComment } = this.state;
+        const { edit, showAddComment, id } = this.state;
 
         if(this.state.edit)
         {
             return <EditPlaylist id={this.state.id}/>;
-        }
-
-        if(this.state.delete)
-        {
-
         }
 
         if(this.state.showAddComment)
@@ -212,7 +293,12 @@ class PlaylistComponent extends React.Component
 
         if(this.state.addSong)
         {
-            return <Navigate to = '/AddSongPage'/>
+            return <Navigate to = {`/AddSongPage/${id}`}/>
+        }
+
+        if(this.state.home)
+        {
+            return <Navigate to = '/home'/>
         }
 
 

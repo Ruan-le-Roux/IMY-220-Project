@@ -45,7 +45,7 @@ const router = createBrowserRouter([
         element: <ProfilePage/>
     },
     {
-        path: '/AddSongPage',
+        path: '/AddSongPage/:id',
         element: <AddSongPage/>
     },
 ]);

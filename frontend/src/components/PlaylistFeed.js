@@ -38,6 +38,18 @@ class PlaylistFeed extends React.Component
             }
             else if( type === 'p')
             {
+                const userId = localStorage.getItem('userId');
+                const res = await fetch(`/api/playlists/my-playlists/${userId}`);
+                const data = await res.json();
+    
+                if(res.ok)
+                {
+                    this.setState({playlists: data.data});
+                }
+                else
+                {
+                    console.error(data.message);
+                }
     
             }
         }

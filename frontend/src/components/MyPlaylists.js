@@ -1,5 +1,5 @@
 import React from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate, Link } from 'react-router-dom';
 
 import playlistPic from '../../public/assets/images/album-cover.png';
 
@@ -56,7 +56,8 @@ class MyPlaylists extends React.Component
     {
         if(this.state.seeAll)
         {
-            return <Navigate to = '/PlaylistPage/12'/>
+            const temp = 'p';
+            return <Navigate to = {`/PlaylistFeedPage/${temp}`}/>
         }
 
         if(this.state.error === true)
@@ -80,12 +81,14 @@ class MyPlaylists extends React.Component
                     {this.state.playlists.length > 0 ? (
                         this.state.playlists.map((playlist) => (
                             <section key={playlist.id}>
-                                <img src={playlistPic} alt={`Cover of ${playlist.name}`} title="Picture of Playlist" />
-                                
-                                <div>
-                                    <h4>{playlist.name}</h4>
-                                    <p>me</p>
-                                </div>
+                                <Link to={`/playlistPage/${playlist.id}`}>
+                                    <img src={playlistPic} alt={`Cover of ${playlist.name}`} title="Picture of Playlist" />
+                                    
+                                    <div>
+                                        <h4>{playlist.name}</h4>
+                                        <p>me</p>
+                                    </div>                                
+                                </Link>
                             </section>
                         ))
                     ) : (
