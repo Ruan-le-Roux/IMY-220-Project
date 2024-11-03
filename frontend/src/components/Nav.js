@@ -60,8 +60,8 @@ class Nav extends React.Component
 
                 <ul>
                     <li><Link to = '/Home'>Home</Link></li>
-                    <li><Link to = '/SongFeedPage'>Song Feed</Link></li>
-                    <li><Link to = '/PlaylistFeedPage'>playlist Feed</Link></li>
+                    <li><Link to = '/SongFeedPage/feed'>Song Feed</Link></li>
+                    <li><Link to = '/PlaylistFeedPage/feed'>playlist Feed</Link></li>
                     <li><Link to = '/ProfilePage/1'><img src = {profilePic} alt = "Profile Picture" title = "Profile Picture"/></Link></li>
                     <li><button onClick={this.handleLogout}>Logout</button></li>
                 </ul>                

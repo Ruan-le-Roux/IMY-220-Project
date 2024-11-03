@@ -44,27 +44,27 @@ function connectDatabase() {
   return _connectDatabase.apply(this, arguments);
 }
 function _connectDatabase() {
-  _connectDatabase = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee30() {
-    return _regeneratorRuntime().wrap(function _callee30$(_context30) {
-      while (1) switch (_context30.prev = _context30.next) {
+  _connectDatabase = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee31() {
+    return _regeneratorRuntime().wrap(function _callee31$(_context31) {
+      while (1) switch (_context31.prev = _context31.next) {
         case 0:
-          _context30.prev = 0;
-          _context30.next = 3;
+          _context31.prev = 0;
+          _context31.next = 3;
           return client.connect();
         case 3:
           db = client.db("SoundSync");
           console.log("Connected to MongoDB");
-          _context30.next = 10;
+          _context31.next = 10;
           break;
         case 7:
-          _context30.prev = 7;
-          _context30.t0 = _context30["catch"](0);
-          console.error("Failed to connect to MongoDB", _context30.t0);
+          _context31.prev = 7;
+          _context31.t0 = _context31["catch"](0);
+          console.error("Failed to connect to MongoDB", _context31.t0);
         case 10:
         case "end":
-          return _context30.stop();
+          return _context31.stop();
       }
-    }, _callee30, null, [[0, 7]]);
+    }, _callee31, null, [[0, 7]]);
   }));
   return _connectDatabase.apply(this, arguments);
 }
@@ -79,54 +79,23 @@ function generateId() {
   return _generateId.apply(this, arguments);
 }
 function _generateId() {
-  _generateId = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee31() {
+  _generateId = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee32() {
     var users, maxId;
-    return _regeneratorRuntime().wrap(function _callee31$(_context31) {
-      while (1) switch (_context31.prev = _context31.next) {
-        case 0:
-          _context31.next = 2;
-          return db.collection("users").find({}).toArray();
-        case 2:
-          users = _context31.sent;
-          if (!(users.length === 0)) {
-            _context31.next = 5;
-            break;
-          }
-          return _context31.abrupt("return", 1);
-        case 5:
-          maxId = Math.max.apply(Math, _toConsumableArray(users.map(function (user) {
-            return user.id;
-          })));
-          return _context31.abrupt("return", maxId + 1);
-        case 7:
-        case "end":
-          return _context31.stop();
-      }
-    }, _callee31);
-  }));
-  return _generateId.apply(this, arguments);
-}
-function generatePlaylistId() {
-  return _generatePlaylistId.apply(this, arguments);
-}
-function _generatePlaylistId() {
-  _generatePlaylistId = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee32() {
-    var playlists, maxId;
     return _regeneratorRuntime().wrap(function _callee32$(_context32) {
       while (1) switch (_context32.prev = _context32.next) {
         case 0:
           _context32.next = 2;
-          return db.collection("playlists").find({}).toArray();
+          return db.collection("users").find({}).toArray();
         case 2:
-          playlists = _context32.sent;
-          if (!(playlists.length === 0)) {
+          users = _context32.sent;
+          if (!(users.length === 0)) {
             _context32.next = 5;
             break;
           }
           return _context32.abrupt("return", 1);
         case 5:
-          maxId = Math.max.apply(Math, _toConsumableArray(playlists.map(function (playlist) {
-            return playlist.id;
+          maxId = Math.max.apply(Math, _toConsumableArray(users.map(function (user) {
+            return user.id;
           })));
           return _context32.abrupt("return", maxId + 1);
         case 7:
@@ -135,41 +104,72 @@ function _generatePlaylistId() {
       }
     }, _callee32);
   }));
+  return _generateId.apply(this, arguments);
+}
+function generatePlaylistId() {
+  return _generatePlaylistId.apply(this, arguments);
+}
+function _generatePlaylistId() {
+  _generatePlaylistId = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee33() {
+    var playlists, maxId;
+    return _regeneratorRuntime().wrap(function _callee33$(_context33) {
+      while (1) switch (_context33.prev = _context33.next) {
+        case 0:
+          _context33.next = 2;
+          return db.collection("playlists").find({}).toArray();
+        case 2:
+          playlists = _context33.sent;
+          if (!(playlists.length === 0)) {
+            _context33.next = 5;
+            break;
+          }
+          return _context33.abrupt("return", 1);
+        case 5:
+          maxId = Math.max.apply(Math, _toConsumableArray(playlists.map(function (playlist) {
+            return playlist.id;
+          })));
+          return _context33.abrupt("return", maxId + 1);
+        case 7:
+        case "end":
+          return _context33.stop();
+      }
+    }, _callee33);
+  }));
   return _generatePlaylistId.apply(this, arguments);
 }
 function generateCommentId(_x) {
   return _generateCommentId.apply(this, arguments);
 }
 function _generateCommentId() {
-  _generateCommentId = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee33(id) {
+  _generateCommentId = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee34(id) {
     var playlist, count, existingCommentIds, maxId;
-    return _regeneratorRuntime().wrap(function _callee33$(_context33) {
-      while (1) switch (_context33.prev = _context33.next) {
+    return _regeneratorRuntime().wrap(function _callee34$(_context34) {
+      while (1) switch (_context34.prev = _context34.next) {
         case 0:
-          _context33.next = 2;
+          _context34.next = 2;
           return db.collection("playlists").findOne({
             id: parseInt(id)
           });
         case 2:
-          playlist = _context33.sent;
+          playlist = _context34.sent;
           count = playlist.comments ? playlist.comments.length : 0;
           if (!(count === 0)) {
-            _context33.next = 8;
+            _context34.next = 8;
             break;
           }
-          return _context33.abrupt("return", 1);
+          return _context34.abrupt("return", 1);
         case 8:
           existingCommentIds = playlist.comments.map(function (comment) {
             return comment.id;
           });
           maxId = Math.max.apply(Math, _toConsumableArray(existingCommentIds));
           maxId++;
-          return _context33.abrupt("return", maxId);
+          return _context34.abrupt("return", maxId);
         case 12:
         case "end":
-          return _context33.stop();
+          return _context34.stop();
       }
-    }, _callee33);
+    }, _callee34);
   }));
   return _generateCommentId.apply(this, arguments);
 }
@@ -177,30 +177,30 @@ function generateSongId() {
   return _generateSongId.apply(this, arguments);
 }
 function _generateSongId() {
-  _generateSongId = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee34() {
+  _generateSongId = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee35() {
     var songs, maxId;
-    return _regeneratorRuntime().wrap(function _callee34$(_context34) {
-      while (1) switch (_context34.prev = _context34.next) {
+    return _regeneratorRuntime().wrap(function _callee35$(_context35) {
+      while (1) switch (_context35.prev = _context35.next) {
         case 0:
-          _context34.next = 2;
+          _context35.next = 2;
           return db.collection("songs").find({}).toArray();
         case 2:
-          songs = _context34.sent;
+          songs = _context35.sent;
           if (!(songs.length === 0)) {
-            _context34.next = 5;
+            _context35.next = 5;
             break;
           }
-          return _context34.abrupt("return", 1);
+          return _context35.abrupt("return", 1);
         case 5:
           maxId = Math.max.apply(Math, _toConsumableArray(songs.map(function (song) {
             return song.id;
           })));
-          return _context34.abrupt("return", maxId + 1);
+          return _context35.abrupt("return", maxId + 1);
         case 7:
         case "end":
-          return _context34.stop();
+          return _context35.stop();
       }
-    }, _callee34);
+    }, _callee35);
   }));
   return _generateSongId.apply(this, arguments);
 }
@@ -208,47 +208,47 @@ function existingUser(_x2, _x3) {
   return _existingUser.apply(this, arguments);
 }
 function _existingUser() {
-  _existingUser = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee35(flag, delimiter) {
+  _existingUser = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee36(flag, delimiter) {
     var _existingUser4, _existingUser5;
-    return _regeneratorRuntime().wrap(function _callee35$(_context35) {
-      while (1) switch (_context35.prev = _context35.next) {
+    return _regeneratorRuntime().wrap(function _callee36$(_context36) {
+      while (1) switch (_context36.prev = _context36.next) {
         case 0:
           if (!(flag === true)) {
-            _context35.next = 9;
+            _context36.next = 9;
             break;
           }
-          _context35.next = 3;
+          _context36.next = 3;
           return db.collection("users").findOne({
             email: delimiter
           });
         case 3:
-          _existingUser4 = _context35.sent;
+          _existingUser4 = _context36.sent;
           if (!_existingUser4) {
-            _context35.next = 6;
+            _context36.next = 6;
             break;
           }
-          return _context35.abrupt("return", true);
+          return _context36.abrupt("return", true);
         case 6:
-          return _context35.abrupt("return", false);
+          return _context36.abrupt("return", false);
         case 9:
-          _context35.next = 11;
+          _context36.next = 11;
           return db.collection("users").findOne({
             id: parseInt(delimiter)
           });
         case 11:
-          _existingUser5 = _context35.sent;
+          _existingUser5 = _context36.sent;
           if (!_existingUser5) {
-            _context35.next = 14;
+            _context36.next = 14;
             break;
           }
-          return _context35.abrupt("return", true);
+          return _context36.abrupt("return", true);
         case 14:
-          return _context35.abrupt("return", false);
+          return _context36.abrupt("return", false);
         case 15:
         case "end":
-          return _context35.stop();
+          return _context36.stop();
       }
-    }, _callee35);
+    }, _callee36);
   }));
   return _existingUser.apply(this, arguments);
 }
@@ -256,48 +256,18 @@ function existingPlaylist(_x4) {
   return _existingPlaylist.apply(this, arguments);
 }
 function _existingPlaylist() {
-  _existingPlaylist = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee36(id) {
+  _existingPlaylist = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee37(id) {
     var existingPlaylist;
-    return _regeneratorRuntime().wrap(function _callee36$(_context36) {
-      while (1) switch (_context36.prev = _context36.next) {
-        case 0:
-          _context36.next = 2;
-          return db.collection("playlists").findOne({
-            id: parseInt(id)
-          });
-        case 2:
-          existingPlaylist = _context36.sent;
-          if (!existingPlaylist) {
-            _context36.next = 5;
-            break;
-          }
-          return _context36.abrupt("return", true);
-        case 5:
-          return _context36.abrupt("return", false);
-        case 6:
-        case "end":
-          return _context36.stop();
-      }
-    }, _callee36);
-  }));
-  return _existingPlaylist.apply(this, arguments);
-}
-function existingSong(_x5) {
-  return _existingSong.apply(this, arguments);
-}
-function _existingSong() {
-  _existingSong = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee37(id) {
-    var existingSong;
     return _regeneratorRuntime().wrap(function _callee37$(_context37) {
       while (1) switch (_context37.prev = _context37.next) {
         case 0:
           _context37.next = 2;
-          return db.collection("songs").findOne({
+          return db.collection("playlists").findOne({
             id: parseInt(id)
           });
         case 2:
-          existingSong = _context37.sent;
-          if (!existingSong) {
+          existingPlaylist = _context37.sent;
+          if (!existingPlaylist) {
             _context37.next = 5;
             break;
           }
@@ -310,25 +280,24 @@ function _existingSong() {
       }
     }, _callee37);
   }));
+  return _existingPlaylist.apply(this, arguments);
+}
+function existingSong(_x5) {
   return _existingSong.apply(this, arguments);
 }
-function songInPlaylist(_x6, _x7) {
-  return _songInPlaylist.apply(this, arguments);
-}
-function _songInPlaylist() {
-  _songInPlaylist = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee38(song, playlist) {
-    var exists;
+function _existingSong() {
+  _existingSong = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee38(id) {
+    var existingSong;
     return _regeneratorRuntime().wrap(function _callee38$(_context38) {
       while (1) switch (_context38.prev = _context38.next) {
         case 0:
           _context38.next = 2;
-          return db.collection("playlists").findOne({
-            id: parseInt(playlist),
-            songId: parseInt(song)
+          return db.collection("songs").findOne({
+            id: parseInt(id)
           });
         case 2:
-          exists = _context38.sent;
-          if (!exists) {
+          existingSong = _context38.sent;
+          if (!existingSong) {
             _context38.next = 5;
             break;
           }
@@ -341,28 +310,21 @@ function _songInPlaylist() {
       }
     }, _callee38);
   }));
+  return _existingSong.apply(this, arguments);
+}
+function songInPlaylist(_x6, _x7) {
   return _songInPlaylist.apply(this, arguments);
 }
-function existingComment(_x8, _x9) {
-  return _existingComment.apply(this, arguments);
-}
-function _existingComment() {
-  _existingComment = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee39(comment, playlist) {
+function _songInPlaylist() {
+  _songInPlaylist = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee39(song, playlist) {
     var exists;
     return _regeneratorRuntime().wrap(function _callee39$(_context39) {
       while (1) switch (_context39.prev = _context39.next) {
         case 0:
           _context39.next = 2;
           return db.collection("playlists").findOne({
-            id: parseInt(playlist)
-          }, {
-            projection: {
-              comments: {
-                $elemMatch: {
-                  id: parseInt(comment)
-                }
-              }
-            }
+            id: parseInt(playlist),
+            songId: parseInt(song)
           });
         case 2:
           exists = _context39.sent;
@@ -378,6 +340,44 @@ function _existingComment() {
           return _context39.stop();
       }
     }, _callee39);
+  }));
+  return _songInPlaylist.apply(this, arguments);
+}
+function existingComment(_x8, _x9) {
+  return _existingComment.apply(this, arguments);
+}
+function _existingComment() {
+  _existingComment = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee40(comment, playlist) {
+    var exists;
+    return _regeneratorRuntime().wrap(function _callee40$(_context40) {
+      while (1) switch (_context40.prev = _context40.next) {
+        case 0:
+          _context40.next = 2;
+          return db.collection("playlists").findOne({
+            id: parseInt(playlist)
+          }, {
+            projection: {
+              comments: {
+                $elemMatch: {
+                  id: parseInt(comment)
+                }
+              }
+            }
+          });
+        case 2:
+          exists = _context40.sent;
+          if (!exists) {
+            _context40.next = 5;
+            break;
+          }
+          return _context40.abrupt("return", true);
+        case 5:
+          return _context40.abrupt("return", false);
+        case 6:
+        case "end":
+          return _context40.stop();
+      }
+    }, _callee40);
   }));
   return _existingComment.apply(this, arguments);
 }
@@ -1578,7 +1578,7 @@ app.get("/api/playlists/:id", /*#__PURE__*/function () {
   };
 }());
 
-//add song
+//add song to playlist
 app.put("/api/playlists/add-song/:id/:userId", /*#__PURE__*/function () {
   var _ref15 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee15(req, res) {
     var _req$params2, id, userId, songId, playlistExists, userExists, songExistsResults, allSongsExist, existingSongs, anySongExistsInPlaylist, _iterator, _step, song, songDetails, playlist, result;
@@ -1872,14 +1872,14 @@ app.put("/api/playlists/delete-song/:id", /*#__PURE__*/function () {
 }());
 
 //add comment to a playlist
-app.put("/api/playlists/add-comment/:id", /*#__PURE__*/function () {
+app.put("/api/playlists/add-comment/:id/:userId", upload.single('image'), /*#__PURE__*/function () {
   var _ref17 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee17(req, res) {
-    var id, _req$body7, userId, text, image, exists, commentId, newComment, result;
+    var _req$params3, id, userId, text, exists, commentId, imageUrl, intId, newComment, result;
     return _regeneratorRuntime().wrap(function _callee17$(_context17) {
       while (1) switch (_context17.prev = _context17.next) {
         case 0:
-          id = req.params.id;
-          _req$body7 = req.body, userId = _req$body7.userId, text = _req$body7.text, image = _req$body7.image;
+          _req$params3 = req.params, id = _req$params3.id, userId = _req$params3.userId;
+          text = req.body.text;
           _context17.prev = 2;
           _context17.next = 5;
           return existingPlaylist(id);
@@ -1898,14 +1898,16 @@ app.put("/api/playlists/add-comment/:id", /*#__PURE__*/function () {
           return generateCommentId(id);
         case 10:
           commentId = _context17.sent;
+          imageUrl = req.file ? "http://localhost:3000/assets/images/".concat(req.file.filename) : "http://localhost:3000/assets/images/album-cover.png";
+          intId = parseInt(userId);
           newComment = {
             id: commentId,
-            userId: userId,
+            userId: intId,
             text: text,
-            image: image || null,
+            image: imageUrl,
             timestamp: new Date()
           };
-          _context17.next = 14;
+          _context17.next = 16;
           return db.collection("playlists").updateOne({
             id: parseInt(id)
           }, {
@@ -1913,37 +1915,37 @@ app.put("/api/playlists/add-comment/:id", /*#__PURE__*/function () {
               comments: newComment
             }
           });
-        case 14:
+        case 16:
           result = _context17.sent;
           if (!(result.modifiedCount === 1)) {
-            _context17.next = 19;
+            _context17.next = 21;
             break;
           }
           return _context17.abrupt("return", res.status(201).json({
             status: "success",
             message: "Comment added"
           }));
-        case 19:
+        case 21:
           return _context17.abrupt("return", res.status(500).json({
             status: "failed",
             message: "Could not add comment"
           }));
-        case 20:
-          _context17.next = 26;
-          break;
         case 22:
-          _context17.prev = 22;
+          _context17.next = 28;
+          break;
+        case 24:
+          _context17.prev = 24;
           _context17.t0 = _context17["catch"](2);
           console.error("Error when adding comment: ", _context17.t0);
           return _context17.abrupt("return", res.status(500).json({
             status: "failed",
             message: "Could not add comment"
           }));
-        case 26:
+        case 28:
         case "end":
           return _context17.stop();
       }
-    }, _callee17, null, [[2, 22]]);
+    }, _callee17, null, [[2, 24]]);
   }));
   return function (_x42, _x43) {
     return _ref17.apply(this, arguments);
@@ -1953,12 +1955,12 @@ app.put("/api/playlists/add-comment/:id", /*#__PURE__*/function () {
 //delete comment
 app.put("/api/playlists/delete-comment/:id", /*#__PURE__*/function () {
   var _ref18 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee18(req, res) {
-    var id, _req$body8, commentId, userId, exists, commentExists, userExist, playlist, comment, result;
+    var id, _req$body7, commentId, userId, exists, commentExists, userExist, playlist, comment, result;
     return _regeneratorRuntime().wrap(function _callee18$(_context18) {
       while (1) switch (_context18.prev = _context18.next) {
         case 0:
           id = req.params.id;
-          _req$body8 = req.body, commentId = _req$body8.commentId, userId = _req$body8.userId; // console.log("user: ", userId);
+          _req$body7 = req.body, commentId = _req$body7.commentId, userId = _req$body7.userId; // console.log("user: ", userId);
           _context18.prev = 2;
           _context18.next = 5;
           return existingPlaylist(id);
@@ -2080,54 +2082,54 @@ app.put("/api/playlists/delete-comment/:id", /*#__PURE__*/function () {
   };
 }());
 
-//get all my playlists
-app.get("/api/playlists/my-playlists/:id", /*#__PURE__*/function () {
+//get all comments
+app.get("/api/playlists/comments/:id", /*#__PURE__*/function () {
   var _ref19 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee19(req, res) {
-    var id, userExist, playlists;
+    var id, exists, playlist;
     return _regeneratorRuntime().wrap(function _callee19$(_context19) {
       while (1) switch (_context19.prev = _context19.next) {
         case 0:
           id = req.params.id;
           _context19.prev = 1;
           _context19.next = 4;
-          return existingUser(false, id);
+          return existingPlaylist(id);
         case 4:
-          userExist = _context19.sent;
-          if (!(userExist === false)) {
+          exists = _context19.sent;
+          if (!(exists === false)) {
             _context19.next = 7;
             break;
           }
           return _context19.abrupt("return", res.status(404).json({
             status: "failed",
-            message: "User does not exist"
+            message: "Could not find playlist"
           }));
         case 7:
           _context19.next = 9;
-          return db.collection("playlists").find({
-            userId: parseInt(id)
-          }).toArray();
+          return db.collection("playlists").findOne({
+            id: parseInt(id)
+          });
         case 9:
-          playlists = _context19.sent;
-          if (!(playlists.length === 0)) {
+          playlist = _context19.sent;
+          if (!(playlist.comments.length <= 0)) {
             _context19.next = 12;
             break;
           }
-          return _context19.abrupt("return", res.status(404).json({
+          return _context19.abrupt("return", (res.status(404), json({
             status: "failed",
-            message: "No playlists found"
-          }));
+            message: "THere are no comments on this playlist"
+          })));
         case 12:
           return _context19.abrupt("return", res.status(200).json({
             status: "success",
-            data: playlists
+            data: playlist.comments
           }));
         case 15:
           _context19.prev = 15;
           _context19.t0 = _context19["catch"](1);
-          console.error('Error getting all my playlists: ', _context19.t0);
+          console.error("Error when getting comments: ", _context19.t0);
           return _context19.abrupt("return", res.status(500).json({
             status: "failed",
-            message: "Could not get all my playlists"
+            message: "Could not get comments"
           }));
         case 19:
         case "end":
@@ -2140,54 +2142,114 @@ app.get("/api/playlists/my-playlists/:id", /*#__PURE__*/function () {
   };
 }());
 
-//get active friends playlists
-app.get("/api/playlists/active-playlists/:id", /*#__PURE__*/function () {
-  var _ref20 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee21(req, res) {
-    var id, userExist, user, friends, playlists, build;
-    return _regeneratorRuntime().wrap(function _callee21$(_context21) {
-      while (1) switch (_context21.prev = _context21.next) {
+//get all my playlists
+app.get("/api/playlists/my-playlists/:id", /*#__PURE__*/function () {
+  var _ref20 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee20(req, res) {
+    var id, userExist, playlists;
+    return _regeneratorRuntime().wrap(function _callee20$(_context20) {
+      while (1) switch (_context20.prev = _context20.next) {
         case 0:
           id = req.params.id;
-          _context21.prev = 1;
-          _context21.next = 4;
+          _context20.prev = 1;
+          _context20.next = 4;
           return existingUser(false, id);
         case 4:
-          userExist = _context21.sent;
+          userExist = _context20.sent;
           if (!(userExist === false)) {
-            _context21.next = 7;
+            _context20.next = 7;
             break;
           }
-          return _context21.abrupt("return", res.status(404).json({
+          return _context20.abrupt("return", res.status(404).json({
             status: "failed",
             message: "User does not exist"
           }));
         case 7:
-          _context21.next = 9;
+          _context20.next = 9;
+          return db.collection("playlists").find({
+            userId: parseInt(id)
+          }).toArray();
+        case 9:
+          playlists = _context20.sent;
+          if (!(playlists.length === 0)) {
+            _context20.next = 12;
+            break;
+          }
+          return _context20.abrupt("return", res.status(404).json({
+            status: "failed",
+            message: "No playlists found"
+          }));
+        case 12:
+          return _context20.abrupt("return", res.status(200).json({
+            status: "success",
+            data: playlists
+          }));
+        case 15:
+          _context20.prev = 15;
+          _context20.t0 = _context20["catch"](1);
+          console.error('Error getting all my playlists: ', _context20.t0);
+          return _context20.abrupt("return", res.status(500).json({
+            status: "failed",
+            message: "Could not get all my playlists"
+          }));
+        case 19:
+        case "end":
+          return _context20.stop();
+      }
+    }, _callee20, null, [[1, 15]]);
+  }));
+  return function (_x48, _x49) {
+    return _ref20.apply(this, arguments);
+  };
+}());
+
+//get active friends playlists
+app.get("/api/playlists/active-playlists/:id", /*#__PURE__*/function () {
+  var _ref21 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee22(req, res) {
+    var id, userExist, user, friends, playlists, build;
+    return _regeneratorRuntime().wrap(function _callee22$(_context22) {
+      while (1) switch (_context22.prev = _context22.next) {
+        case 0:
+          id = req.params.id;
+          _context22.prev = 1;
+          _context22.next = 4;
+          return existingUser(false, id);
+        case 4:
+          userExist = _context22.sent;
+          if (!(userExist === false)) {
+            _context22.next = 7;
+            break;
+          }
+          return _context22.abrupt("return", res.status(404).json({
+            status: "failed",
+            message: "User does not exist"
+          }));
+        case 7:
+          _context22.next = 9;
           return db.collection('users').findOne({
             id: parseInt(id)
           });
         case 9:
-          user = _context21.sent;
+          user = _context22.sent;
           if (!(user && user.following && user.following.length > 0)) {
-            _context21.next = 23;
+            _context22.next = 23;
             break;
           }
-          _context21.next = 13;
+          _context22.next = 13;
           return db.collection('users').find({
             id: {
               $in: user.following
             }
           }).toArray();
         case 13:
-          friends = _context21.sent;
-          _context21.next = 16;
+          friends = _context22.sent;
+          _context22.next = 16;
           return Promise.all(friends.flatMap(/*#__PURE__*/function () {
-            var _ref21 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee20(friend) {
+            var _ref22 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee21(friend) {
               var temp;
-              return _regeneratorRuntime().wrap(function _callee20$(_context20) {
-                while (1) switch (_context20.prev = _context20.next) {
+              return _regeneratorRuntime().wrap(function _callee21$(_context21) {
+                while (1) switch (_context21.prev = _context21.next) {
                   case 0:
-                    _context20.next = 2;
+                    _context21.next = 2;
                     return db.collection("playlists").find({
                       id: {
                         $in: friend.playlists
@@ -2196,280 +2258,280 @@ app.get("/api/playlists/active-playlists/:id", /*#__PURE__*/function () {
                       updatedAt: 1
                     }).toArray();
                   case 2:
-                    temp = _context20.sent;
-                    return _context20.abrupt("return", temp.map(function (playlist) {
+                    temp = _context21.sent;
+                    return _context21.abrupt("return", temp.map(function (playlist) {
                       return _objectSpread({
                         owner: "".concat(friend.name, " ").concat(friend.surname)
                       }, playlist);
                     }));
                   case 4:
                   case "end":
-                    return _context20.stop();
+                    return _context21.stop();
                 }
-              }, _callee20);
+              }, _callee21);
             }));
-            return function (_x50) {
-              return _ref21.apply(this, arguments);
+            return function (_x52) {
+              return _ref22.apply(this, arguments);
             };
           }()));
         case 16:
-          playlists = _context21.sent;
+          playlists = _context22.sent;
           build = playlists.flat();
           if (!(build.length === 0)) {
-            _context21.next = 20;
+            _context22.next = 20;
             break;
           }
-          return _context21.abrupt("return", res.status(404).json({
+          return _context22.abrupt("return", res.status(404).json({
             status: "failed",
             message: "Friends do not have any playlists"
           }));
         case 20:
-          return _context21.abrupt("return", res.status(200).json({
+          return _context22.abrupt("return", res.status(200).json({
             status: "success",
             data: build
           }));
         case 23:
           if (!(user.following.length === 0)) {
-            _context21.next = 25;
+            _context22.next = 25;
             break;
           }
-          return _context21.abrupt("return", res.status(404).json({
+          return _context22.abrupt("return", res.status(404).json({
             status: "failed",
             message: "User does not follow anyone"
           }));
         case 25:
-          return _context21.abrupt("return", res.status(500).json({
+          return _context22.abrupt("return", res.status(500).json({
             status: "failed",
             message: "Could not find users following",
             data: "user: ".concat(user, ", following: ").concat(user.following, ", length: ").concat(user.following.length)
           }));
         case 28:
-          _context21.prev = 28;
-          _context21.t0 = _context21["catch"](1);
-          console.error('Error getting all friends playlists: ', _context21.t0);
-          return _context21.abrupt("return", res.status(500).json({
+          _context22.prev = 28;
+          _context22.t0 = _context22["catch"](1);
+          console.error('Error getting all friends playlists: ', _context22.t0);
+          return _context22.abrupt("return", res.status(500).json({
             status: "failed",
             message: "Could not get users following playlists"
           }));
         case 32:
         case "end":
-          return _context21.stop();
+          return _context22.stop();
       }
-    }, _callee21, null, [[1, 28]]);
+    }, _callee22, null, [[1, 28]]);
   }));
-  return function (_x48, _x49) {
-    return _ref20.apply(this, arguments);
+  return function (_x50, _x51) {
+    return _ref21.apply(this, arguments);
   };
 }());
 
 //get songs in playlist
 app.get("/api/playlists/get-songs/:id", /*#__PURE__*/function () {
-  var _ref22 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee23(req, res) {
+  var _ref23 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee24(req, res) {
     var id, playlistExists, playlist, songs;
-    return _regeneratorRuntime().wrap(function _callee23$(_context23) {
-      while (1) switch (_context23.prev = _context23.next) {
+    return _regeneratorRuntime().wrap(function _callee24$(_context24) {
+      while (1) switch (_context24.prev = _context24.next) {
         case 0:
           id = req.params.id;
-          _context23.prev = 1;
-          _context23.next = 4;
+          _context24.prev = 1;
+          _context24.next = 4;
           return existingPlaylist(id);
         case 4:
-          playlistExists = _context23.sent;
+          playlistExists = _context24.sent;
           if (!(playlistExists === false)) {
-            _context23.next = 7;
+            _context24.next = 7;
             break;
           }
-          return _context23.abrupt("return", res.status(404).json({
+          return _context24.abrupt("return", res.status(404).json({
             status: "failed",
             message: "Playlist does not exist"
           }));
         case 7:
-          _context23.next = 9;
+          _context24.next = 9;
           return db.collection('playlists').findOne({
             id: parseInt(id)
           });
         case 9:
-          playlist = _context23.sent;
+          playlist = _context24.sent;
           if (!(playlist.songId.length > 0)) {
-            _context23.next = 15;
+            _context24.next = 15;
             break;
           }
-          _context23.next = 13;
+          _context24.next = 13;
           return Promise.all(playlist.songId.map(/*#__PURE__*/function () {
-            var _ref23 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee22(song) {
-              return _regeneratorRuntime().wrap(function _callee22$(_context22) {
-                while (1) switch (_context22.prev = _context22.next) {
+            var _ref24 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee23(song) {
+              return _regeneratorRuntime().wrap(function _callee23$(_context23) {
+                while (1) switch (_context23.prev = _context23.next) {
                   case 0:
-                    _context22.next = 2;
+                    _context23.next = 2;
                     return db.collection('songs').findOne({
                       id: parseInt(song)
                     });
                   case 2:
-                    return _context22.abrupt("return", _context22.sent);
+                    return _context23.abrupt("return", _context23.sent);
                   case 3:
                   case "end":
-                    return _context22.stop();
+                    return _context23.stop();
                 }
-              }, _callee22);
+              }, _callee23);
             }));
-            return function (_x53) {
-              return _ref23.apply(this, arguments);
+            return function (_x55) {
+              return _ref24.apply(this, arguments);
             };
           }()));
         case 13:
-          songs = _context23.sent;
-          return _context23.abrupt("return", res.status(200).json({
+          songs = _context24.sent;
+          return _context24.abrupt("return", res.status(200).json({
             status: "success",
             data: songs
           }));
         case 15:
-          return _context23.abrupt("return", res.status(404).json({
+          return _context24.abrupt("return", res.status(404).json({
             status: "failed",
             message: "Playlist has no songs"
           }));
         case 18:
-          _context23.prev = 18;
-          _context23.t0 = _context23["catch"](1);
-          console.error("Error getting all songs in a playlist: ", _context23.t0);
+          _context24.prev = 18;
+          _context24.t0 = _context24["catch"](1);
+          console.error("Error getting all songs in a playlist: ", _context24.t0);
           res.status(500).json({
             status: "failed",
             message: "Could not get all songs in a playlist"
           });
         case 22:
         case "end":
-          return _context23.stop();
+          return _context24.stop();
       }
-    }, _callee23, null, [[1, 18]]);
+    }, _callee24, null, [[1, 18]]);
   }));
-  return function (_x51, _x52) {
-    return _ref22.apply(this, arguments);
+  return function (_x53, _x54) {
+    return _ref23.apply(this, arguments);
   };
 }());
 
 //is owner of playlist
 app.get('/api/playlists/is-owner/:playlistId/:userId', /*#__PURE__*/function () {
-  var _ref24 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee24(req, res) {
-    var _req$params3, playlistId, userId, playlist, userExists;
-    return _regeneratorRuntime().wrap(function _callee24$(_context24) {
-      while (1) switch (_context24.prev = _context24.next) {
+  var _ref25 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee25(req, res) {
+    var _req$params4, playlistId, userId, playlist, userExists;
+    return _regeneratorRuntime().wrap(function _callee25$(_context25) {
+      while (1) switch (_context25.prev = _context25.next) {
         case 0:
-          _req$params3 = req.params, playlistId = _req$params3.playlistId, userId = _req$params3.userId;
-          _context24.prev = 1;
-          _context24.next = 4;
+          _req$params4 = req.params, playlistId = _req$params4.playlistId, userId = _req$params4.userId;
+          _context25.prev = 1;
+          _context25.next = 4;
           return db.collection('playlists').findOne({
             id: parseInt(playlistId)
           });
         case 4:
-          playlist = _context24.sent;
-          _context24.next = 7;
+          playlist = _context25.sent;
+          _context25.next = 7;
           return db.collection('users').findOne({
             id: parseInt(userId)
           });
         case 7:
-          userExists = _context24.sent;
+          userExists = _context25.sent;
           if (userExists) {
-            _context24.next = 10;
+            _context25.next = 10;
             break;
           }
-          return _context24.abrupt("return", res.status(404).json({
+          return _context25.abrupt("return", res.status(404).json({
             status: "failed",
             message: "Could not find user"
           }));
         case 10:
           if (playlist) {
-            _context24.next = 12;
+            _context25.next = 12;
             break;
           }
-          return _context24.abrupt("return", res.status(404).json({
+          return _context25.abrupt("return", res.status(404).json({
             status: "failed",
             message: "Could not find playlist"
           }));
         case 12:
           if (!(playlist.userId == userId)) {
-            _context24.next = 14;
+            _context25.next = 14;
             break;
           }
-          return _context24.abrupt("return", res.status(200).json({
+          return _context25.abrupt("return", res.status(200).json({
             status: "success",
             message: "The user is the owner of the playlist"
           }));
         case 14:
-          return _context24.abrupt("return", res.status(401).json({
+          return _context25.abrupt("return", res.status(401).json({
             status: "failed",
             message: "User is not the owner of the playlist"
           }));
         case 17:
-          _context24.prev = 17;
-          _context24.t0 = _context24["catch"](1);
-          console.error("Error while checking if user is owner of playlist", _context24.t0);
-          return _context24.abrupt("return", res.status(500).json({
+          _context25.prev = 17;
+          _context25.t0 = _context25["catch"](1);
+          console.error("Error while checking if user is owner of playlist", _context25.t0);
+          return _context25.abrupt("return", res.status(500).json({
             status: "failed",
             message: "Could not check if user is the owner of the playlist"
           }));
         case 21:
         case "end":
-          return _context24.stop();
+          return _context25.stop();
       }
-    }, _callee24, null, [[1, 17]]);
+    }, _callee25, null, [[1, 17]]);
   }));
-  return function (_x54, _x55) {
-    return _ref24.apply(this, arguments);
+  return function (_x56, _x57) {
+    return _ref25.apply(this, arguments);
   };
 }());
 
 //songs
 //add a song
 app.post("/api/songs/add-song", /*#__PURE__*/function () {
-  var _ref25 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee25(req, res) {
-    var _req$body9, title, artist, link, userId, exists, id, timestamp, spotifyPattern, match, trackId, embedUrl, newSong, result;
-    return _regeneratorRuntime().wrap(function _callee25$(_context25) {
-      while (1) switch (_context25.prev = _context25.next) {
+  var _ref26 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee26(req, res) {
+    var _req$body8, title, artist, link, userId, exists, id, timestamp, spotifyPattern, match, trackId, embedUrl, newSong, result;
+    return _regeneratorRuntime().wrap(function _callee26$(_context26) {
+      while (1) switch (_context26.prev = _context26.next) {
         case 0:
-          _context25.prev = 0;
-          _req$body9 = req.body, title = _req$body9.title, artist = _req$body9.artist, link = _req$body9.link, userId = _req$body9.userId;
+          _context26.prev = 0;
+          _req$body8 = req.body, title = _req$body8.title, artist = _req$body8.artist, link = _req$body8.link, userId = _req$body8.userId;
           if (userId) {
-            _context25.next = 4;
+            _context26.next = 4;
             break;
           }
-          return _context25.abrupt("return", res.status(400).json({
+          return _context26.abrupt("return", res.status(400).json({
             status: "failed",
             message: "userId is required"
           }));
         case 4:
           if (!(!title || !artist || !link)) {
-            _context25.next = 6;
+            _context26.next = 6;
             break;
           }
-          return _context25.abrupt("return", res.status(404).json({
+          return _context26.abrupt("return", res.status(404).json({
             status: "failed",
             message: "Song title, artist name and link to song is required"
           }));
         case 6:
-          _context25.next = 8;
+          _context26.next = 8;
           return existingUser(false, userId);
         case 8:
-          exists = _context25.sent;
+          exists = _context26.sent;
           if (!(exists === false)) {
-            _context25.next = 11;
+            _context26.next = 11;
             break;
           }
-          return _context25.abrupt("return", res.status(400).json({
+          return _context26.abrupt("return", res.status(400).json({
             status: "failed",
             message: "User could not be found"
           }));
         case 11:
-          _context25.next = 13;
+          _context26.next = 13;
           return generateSongId();
         case 13:
-          id = _context25.sent;
+          id = _context26.sent;
           timestamp = getDate();
           spotifyPattern = /https:\/\/open\.spotify\.com\/track\/([a-zA-Z0-9]+)/;
           match = link.match(spotifyPattern);
           if (match) {
-            _context25.next = 19;
+            _context26.next = 19;
             break;
           }
-          return _context25.abrupt("return", res.status(400).json({
+          return _context26.abrupt("return", res.status(400).json({
             status: "failed",
             message: "Invalid Spotify URL"
           }));
@@ -2485,81 +2547,82 @@ app.post("/api/songs/add-song", /*#__PURE__*/function () {
             deleted: false,
             ownerId: userId
           };
-          _context25.next = 24;
+          _context26.next = 24;
           return db.collection("songs").insertOne(newSong);
         case 24:
-          result = _context25.sent;
-          return _context25.abrupt("return", res.status(201).json({
+          result = _context26.sent;
+          return _context26.abrupt("return", res.status(201).json({
             status: "success",
-            message: "New song added"
+            message: "New song added",
+            data: id
           }));
         case 28:
-          _context25.prev = 28;
-          _context25.t0 = _context25["catch"](0);
-          console.error("Error when adding new song: ", _context25.t0);
-          return _context25.abrupt("return", res.status(500).json({
+          _context26.prev = 28;
+          _context26.t0 = _context26["catch"](0);
+          console.error("Error when adding new song: ", _context26.t0);
+          return _context26.abrupt("return", res.status(500).json({
             status: "failed",
             message: "Could not add new song"
           }));
         case 32:
         case "end":
-          return _context25.stop();
+          return _context26.stop();
       }
-    }, _callee25, null, [[0, 28]]);
+    }, _callee26, null, [[0, 28]]);
   }));
-  return function (_x56, _x57) {
-    return _ref25.apply(this, arguments);
+  return function (_x58, _x59) {
+    return _ref26.apply(this, arguments);
   };
 }());
 
 //delete a song
 app.put("/api/songs/delete-song/:id", /*#__PURE__*/function () {
-  var _ref26 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee26(req, res) {
+  var _ref27 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee27(req, res) {
     var id, userId, exists, song, result;
-    return _regeneratorRuntime().wrap(function _callee26$(_context26) {
-      while (1) switch (_context26.prev = _context26.next) {
+    return _regeneratorRuntime().wrap(function _callee27$(_context27) {
+      while (1) switch (_context27.prev = _context27.next) {
         case 0:
           id = req.params.id;
-          _context26.prev = 1;
+          _context27.prev = 1;
           userId = req.body.userId;
-          _context26.next = 5;
+          _context27.next = 5;
           return existingUser(false, userId);
         case 5:
-          exists = _context26.sent;
+          exists = _context27.sent;
           if (!(exists === false)) {
-            _context26.next = 8;
+            _context27.next = 8;
             break;
           }
-          return _context26.abrupt("return", res.status(404).json({
+          return _context27.abrupt("return", res.status(404).json({
             status: "failed",
             message: "user could not be found"
           }));
         case 8:
-          _context26.next = 10;
+          _context27.next = 10;
           return db.collection("songs").findOne({
             id: parseInt(id)
           });
         case 10:
-          song = _context26.sent;
+          song = _context27.sent;
           if (song) {
-            _context26.next = 13;
+            _context27.next = 13;
             break;
           }
-          return _context26.abrupt("return", res.status(404).json({
+          return _context27.abrupt("return", res.status(404).json({
             status: "failed",
             message: "Song could not be found"
           }));
         case 13:
           if (!(song.ownerId !== userId)) {
-            _context26.next = 15;
+            _context27.next = 15;
             break;
           }
-          return _context26.abrupt("return", res.status(401).json({
+          return _context27.abrupt("return", res.status(401).json({
             status: "failed",
             message: "You are not the owner of this song you can not delete it"
           }));
         case 15:
-          _context26.next = 17;
+          _context27.next = 17;
           return db.collection("songs").updateOne({
             id: parseInt(id)
           }, {
@@ -2568,139 +2631,88 @@ app.put("/api/songs/delete-song/:id", /*#__PURE__*/function () {
             }
           });
         case 17:
-          result = _context26.sent;
+          result = _context27.sent;
           if (!(result.modifiedCount === 1)) {
-            _context26.next = 22;
+            _context27.next = 22;
             break;
           }
-          return _context26.abrupt("return", res.status(200).json({
+          return _context27.abrupt("return", res.status(200).json({
             status: "success",
             message: "Deleted song"
           }));
         case 22:
-          return _context26.abrupt("return", res.status(500).json({
+          return _context27.abrupt("return", res.status(500).json({
             status: "failed",
             message: "Could not delete song"
           }));
         case 23:
-          _context26.next = 29;
+          _context27.next = 29;
           break;
         case 25:
-          _context26.prev = 25;
-          _context26.t0 = _context26["catch"](1);
-          console.error("Error while deleting song: ", _context26.t0);
-          return _context26.abrupt("return", res.status(500).json({
+          _context27.prev = 25;
+          _context27.t0 = _context27["catch"](1);
+          console.error("Error while deleting song: ", _context27.t0);
+          return _context27.abrupt("return", res.status(500).json({
             status: "failed",
             message: "Could not delete song"
           }));
         case 29:
         case "end":
-          return _context26.stop();
-      }
-    }, _callee26, null, [[1, 25]]);
-  }));
-  return function (_x58, _x59) {
-    return _ref26.apply(this, arguments);
-  };
-}());
-
-//get all songs
-app.get("/api/songs", /*#__PURE__*/function () {
-  var _ref27 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee27(req, res) {
-    var songs;
-    return _regeneratorRuntime().wrap(function _callee27$(_context27) {
-      while (1) switch (_context27.prev = _context27.next) {
-        case 0:
-          _context27.prev = 0;
-          _context27.next = 3;
-          return db.collection("songs").find({}).toArray();
-        case 3:
-          songs = _context27.sent;
-          return _context27.abrupt("return", res.status(200).json({
-            status: "success",
-            data: songs
-          }));
-        case 7:
-          _context27.prev = 7;
-          _context27.t0 = _context27["catch"](0);
-          console.error("Error getting all songs: ", _context27.t0);
-          return _context27.abrupt("return", res.status(500).json({
-            status: "failed",
-            message: "Could not get all songs"
-          }));
-        case 11:
-        case "end":
           return _context27.stop();
       }
-    }, _callee27, null, [[0, 7]]);
+    }, _callee27, null, [[1, 25]]);
   }));
   return function (_x60, _x61) {
     return _ref27.apply(this, arguments);
   };
 }());
 
-//get song by id
-app.get("/api/songs/:id", /*#__PURE__*/function () {
+//get all songs
+app.get("/api/songs", /*#__PURE__*/function () {
   var _ref28 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee28(req, res) {
-    var id, exists, song;
+    var songs;
     return _regeneratorRuntime().wrap(function _callee28$(_context28) {
       while (1) switch (_context28.prev = _context28.next) {
         case 0:
-          id = req.params.id;
-          _context28.prev = 1;
-          _context28.next = 4;
-          return existingSong(id);
-        case 4:
-          exists = _context28.sent;
-          if (!(exists === false)) {
-            _context28.next = 7;
-            break;
-          }
-          return _context28.abrupt("return", res.status(404).json({
-            status: "failed",
-            message: "Song could not be found"
+          _context28.prev = 0;
+          _context28.next = 3;
+          return db.collection("songs").find({}).toArray();
+        case 3:
+          songs = _context28.sent;
+          return _context28.abrupt("return", res.status(200).json({
+            status: "success",
+            data: songs
           }));
         case 7:
-          _context28.next = 9;
-          return db.collection("songs").findOne({
-            id: id
-          });
-        case 9:
-          song = _context28.sent;
-          return _context28.abrupt("return", res.status(200).json({
-            status: 'success',
-            data: song
-          }));
-        case 13:
-          _context28.prev = 13;
-          _context28.t0 = _context28["catch"](1);
-          console.error("Error getting song buy id: ", _context28.t0);
-          return _context28.abrupt("return", (res, status(500).json({
+          _context28.prev = 7;
+          _context28.t0 = _context28["catch"](0);
+          console.error("Error getting all songs: ", _context28.t0);
+          return _context28.abrupt("return", res.status(500).json({
             status: "failed",
-            message: "Could not find song by id"
-          })));
-        case 17:
+            message: "Could not get all songs"
+          }));
+        case 11:
         case "end":
           return _context28.stop();
       }
-    }, _callee28, null, [[1, 13]]);
+    }, _callee28, null, [[0, 7]]);
   }));
   return function (_x62, _x63) {
     return _ref28.apply(this, arguments);
   };
 }());
 
-//get all my songs
-app.get("/api/songs/my-songs/:id", /*#__PURE__*/function () {
+//get song by id
+app.get("/api/songs/:id", /*#__PURE__*/function () {
   var _ref29 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee29(req, res) {
-    var id, exists, songs;
+    var id, exists, song;
     return _regeneratorRuntime().wrap(function _callee29$(_context29) {
       while (1) switch (_context29.prev = _context29.next) {
         case 0:
           id = req.params.id;
           _context29.prev = 1;
           _context29.next = 4;
-          return existingUser(false, id);
+          return existingSong(id);
         case 4:
           exists = _context29.sent;
           if (!(exists === false)) {
@@ -2709,44 +2721,95 @@ app.get("/api/songs/my-songs/:id", /*#__PURE__*/function () {
           }
           return _context29.abrupt("return", res.status(404).json({
             status: "failed",
-            message: "User could not be found"
+            message: "Song could not be found"
           }));
         case 7:
           _context29.next = 9;
+          return db.collection("songs").findOne({
+            id: id
+          });
+        case 9:
+          song = _context29.sent;
+          return _context29.abrupt("return", res.status(200).json({
+            status: 'success',
+            data: song
+          }));
+        case 13:
+          _context29.prev = 13;
+          _context29.t0 = _context29["catch"](1);
+          console.error("Error getting song buy id: ", _context29.t0);
+          return _context29.abrupt("return", (res, status(500).json({
+            status: "failed",
+            message: "Could not find song by id"
+          })));
+        case 17:
+        case "end":
+          return _context29.stop();
+      }
+    }, _callee29, null, [[1, 13]]);
+  }));
+  return function (_x64, _x65) {
+    return _ref29.apply(this, arguments);
+  };
+}());
+
+//get all my songs
+app.get("/api/songs/my-songs/:id", /*#__PURE__*/function () {
+  var _ref30 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee30(req, res) {
+    var id, exists, songs;
+    return _regeneratorRuntime().wrap(function _callee30$(_context30) {
+      while (1) switch (_context30.prev = _context30.next) {
+        case 0:
+          id = req.params.id;
+          _context30.prev = 1;
+          _context30.next = 4;
+          return existingUser(false, id);
+        case 4:
+          exists = _context30.sent;
+          if (!(exists === false)) {
+            _context30.next = 7;
+            break;
+          }
+          return _context30.abrupt("return", res.status(404).json({
+            status: "failed",
+            message: "User could not be found"
+          }));
+        case 7:
+          _context30.next = 9;
           return db.collection("songs").find({
             ownerId: parseInt(id)
           }).toArray();
         case 9:
-          songs = _context29.sent;
+          songs = _context30.sent;
           if (!(songs.length === 0)) {
-            _context29.next = 12;
+            _context30.next = 12;
             break;
           }
-          return _context29.abrupt("return", res.status(404).json({
+          return _context30.abrupt("return", res.status(404).json({
             status: "failed",
             message: "No songs found"
           }));
         case 12:
-          return _context29.abrupt("return", res.status(200).json({
+          return _context30.abrupt("return", res.status(200).json({
             status: 'success',
             data: songs
           }));
         case 15:
-          _context29.prev = 15;
-          _context29.t0 = _context29["catch"](1);
-          console.error("Error getting song buy id: ", _context29.t0);
-          return _context29.abrupt("return", res.status(500).json({
+          _context30.prev = 15;
+          _context30.t0 = _context30["catch"](1);
+          console.error("Error getting song buy id: ", _context30.t0);
+          return _context30.abrupt("return", res.status(500).json({
             status: "failed",
             message: "Could not find song by id"
           }));
         case 19:
         case "end":
-          return _context29.stop();
+          return _context30.stop();
       }
-    }, _callee29, null, [[1, 15]]);
+    }, _callee30, null, [[1, 15]]);
   }));
-  return function (_x64, _x65) {
-    return _ref29.apply(this, arguments);
+  return function (_x66, _x67) {
+    return _ref30.apply(this, arguments);
   };
 }());
 app.use(_express["default"]["static"]("frontend/public"));

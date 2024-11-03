@@ -52,12 +52,26 @@ class PlaylistFeed extends React.Component
                 }
     
             }
+            else if(type === 'feed')
+            {
+                const userId = localStorage.getItem('userId');
+                const res = await fetch(`/api/playlists`);
+                const data = await res.json();
+    
+                if(res.ok)
+                {
+                    this.setState({playlists: data.data});
+                }
+                else
+                {
+                    console.error(data.message);
+                }
+            }
         }
         catch(error)
         {
             console.error("Error in api call: ", error);
         }
-
     }
 
     displayPlaylists()
@@ -73,7 +87,7 @@ class PlaylistFeed extends React.Component
                     {this.state.playlists.map((playlist) => (
                         <section key={playlist.id} >
                             <Link to={`/PlaylistPage/${playlist.id}`}>
-                                <img src = {playlistPic} alt = "Picture of Playlist" title = "Picture of Playlist"/>
+                                <img src = {playlist.coverImage} alt = "Picture of Playlist" title = "Picture of Playlist"/>
                                 
                                 <div>
                                     <h4>{playlist.name}</h4>
@@ -95,7 +109,7 @@ class PlaylistFeed extends React.Component
                     {this.state.playlists.map((playlist) => (
                         <section key={playlist.id} >
                             <Link to={`/PlaylistPage/${playlist.id}`}>
-                                <img src = {playlistPic} alt = "Picture of Playlist" title = "Picture of Playlist"/>
+                                <img src = {playlist.coverImage} alt = "Picture of Playlist" title = "Picture of Playlist"/>
                                 
                                 <div>
                                     <h4>{playlist.name}</h4>

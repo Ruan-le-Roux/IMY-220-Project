@@ -938,7 +938,7 @@ app.get("/api/playlists/:id", async (req, res) => {
     }    
 });
 
-//add song
+//add song to playlist
 app.put("/api/playlists/add-song/:id/:userId", async (req, res) => {
     const { id, userId } = req.params;
     const { songId } = req.body; // Assuming songId is an array
@@ -1078,10 +1078,10 @@ app.put("/api/playlists/delete-song/:id", async (req, res) => {
 });
 
 //add comment to a playlist
-app.put("/api/playlists/add-comment/:id", async (req, res) => {
-    const {id} = req.params;
+app.put("/api/playlists/add-comment/:id/:userId", upload.single('image'), async (req, res) => {
+    const {id, userId} = req.params;
 
-    const {userId, text, image} = req.body;
+    const {text} = req.body;
 
     try
     {
@@ -1094,12 +1094,16 @@ app.put("/api/playlists/add-comment/:id", async (req, res) => {
 
         const commentId = await generateCommentId(id);
 
+        const imageUrl = req.file ? `http://localhost:3000/assets/images/${req.file.filename}` : `http://localhost:3000/assets/images/album-cover.png`;
+
+        const intId = parseInt(userId);
+
         const newComment = 
         {
             id: commentId,
-            userId,
+            userId: intId,
             text,
-            image: image || null,
+            image: imageUrl,
             timestamp: new Date(),
         };
 
@@ -1189,6 +1193,36 @@ app.put("/api/playlists/delete-comment/:id", async (req, res) => {
     {
         console.error("Error when deleting comment: ", error);
         return res.status(500).json({status: "failed", message: "Could not delete comment"});
+    }
+});
+
+//get all comments
+app.get("/api/playlists/comments/:id", async (req, res) => {
+
+    const {id} = req.params;
+
+    try
+    {
+        const exists = await existingPlaylist(id);
+        
+        if(exists === false)
+        {
+            return res.status(404).json({status: "failed", message: "Could not find playlist"});
+        }
+
+        const playlist = await db.collection("playlists").findOne({id : parseInt(id)});
+
+        if(playlist.comments.length <= 0)
+        {
+            return res.status(404),json({status: "failed", message: "THere are no comments on this playlist"});            
+        }
+
+        return res.status(200).json({status: "success", data: playlist.comments});
+    }
+    catch(error)
+    {
+        console.error("Error when getting comments: ", error);
+        return res.status(500).json({status: "failed", message: "Could not get comments"});
     }
 });
 
@@ -1429,7 +1463,7 @@ app.post("/api/songs/add-song", async (req, res) => {
 
         const result = await db.collection("songs").insertOne(newSong);
 
-        return res.status(201).json({status: "success", message: "New song added"});
+        return res.status(201).json({status: "success", message: "New song added", data: id});
     }
     catch(error)
     {

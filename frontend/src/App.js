@@ -37,7 +37,7 @@ const router = createBrowserRouter([
         element: <PlaylistPage/>
     },
     {
-        path: '/SongFeedPage',
+        path: '/SongFeedPage/:type',
         element: <SongFeedPage/>
     },
     {

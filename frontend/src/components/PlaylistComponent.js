@@ -235,7 +235,7 @@ class PlaylistComponent extends React.Component
                     
 
                     <div>
-                        <CommentList/>
+                        <CommentList id={this.state.id}/>
                     </div>
                 </div>
             </main>
@@ -287,7 +287,7 @@ class PlaylistComponent extends React.Component
 
         if(this.state.showAddComment)
         {
-            return <AddComment/>
+            return <AddComment id={this.state.id}/>
 
         }
 

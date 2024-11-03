@@ -73,7 +73,8 @@ class Songs extends React.Component
 
         if(this.state.seeAll)
         {
-            return <Navigate to = '/SongFeedPage'/>
+            const type = 'home';
+            return <Navigate to = {`/SongFeedPage/${type}`}/>
         }
         return(
             <div>
