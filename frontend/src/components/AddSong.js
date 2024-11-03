@@ -19,7 +19,9 @@ class AddSong extends React.Component
             id: this.props.id,
             name: '',
             artist: '',
-            link: ''
+            link: '',
+            type: this.props.type,
+            done: false,
         };
 
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -37,42 +39,88 @@ class AddSong extends React.Component
     {
         e.preventDefault();
 
-        try
+        console.log(`type: ${this.state.type}`);
+
+        if(this.state.type === 's')
         {
-            const userId = parseInt(localStorage.getItem('userId'));
-            const res = await fetch(`/api/songs/add-song`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    title: this.state.name,
-                    artist: this.state.artist,
-                    link: this.state.link,
-                    userId: userId
-                })
-            });
-            const data = await res.json();
-
-            if(res.ok)
+            console.log(`this is the type: ${type}`);
+            try
             {
-                this.setState({selectedSongs: [data.data]}, () => {
-                    this.handleAddSongs();
-
+                const userId = parseInt(localStorage.getItem('userId'));
+                const res = await fetch(`/api/songs/add-song`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        title: this.state.name,
+                        artist: this.state.artist,
+                        link: this.state.link,
+                        userId: userId
+                    })
                 });
-                // this.setState({addSong: true});
+                const data = await res.json();
+    
+                if(res.ok)
+                {
+                    this.setState({selectedSongs: [data.data]});
+                    // window.alert("Song added");
+
+                    this.setState({done: true});
+                }
+                else
+                {
+                    console.error(data.message);
+                    window.alert("Songs could not be added to playlist");
+                }
             }
-            else
+            catch(error)
             {
-                console.error(data.message);
+                console.error("Error when adding song to playlist: ", error);
                 window.alert("Songs could not be added to playlist");
             }
         }
-        catch(error)
+        else
         {
-            console.error("Error when adding song to playlist: ", error);
-            window.alert("Songs could not be added to playlist");
+
+            try
+            {
+                const userId = parseInt(localStorage.getItem('userId'));
+                const res = await fetch(`/api/songs/add-song`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        title: this.state.name,
+                        artist: this.state.artist,
+                        link: this.state.link,
+                        userId: userId
+                    })
+                });
+                const data = await res.json();
+    
+                if(res.ok)
+                {
+                    this.setState({selectedSongs: [data.data]}, () => {
+                        this.handleAddSongs();
+    
+                    });
+                    // this.setState({addSong: true});
+                }
+                else
+                {
+                    console.error(data.message);
+                    window.alert("Songs could not be added to playlist");
+                }
+            }
+            catch(error)
+            {
+                console.error("Error when adding song to playlist: ", error);
+                window.alert("Songs could not be added to playlist");
+            }
         }
+
 
     }
 
@@ -194,6 +242,12 @@ class AddSong extends React.Component
             return <Navigate to = {`/PlaylistPage/${this.state.id}`}/>;
         }
 
+        if(this.state.done)
+        {
+            const userId = localStorage.getItem('userId');
+            return <Navigate to = {`/ProfilePage/${userId}`}/>;
+        }
+
         return(
             <div>
                 <form onSubmit = {this.handleSubmit}>
@@ -218,13 +272,13 @@ class AddSong extends React.Component
                     </label>
 
                     <button type = 'submit'>Add Song</button>
-
-                    <h1>Choose a song</h1>
-
-                    {this.displaySongs()}
-
-                    <button type='button' onClick={this.handleAddSongs}>Add Selected Songs</button>
                 </form>
+
+                <h1>Choose a song</h1>
+
+                {this.displaySongs()}
+
+                <button type='button' onClick={this.handleAddSongs}>Add Selected Songs</button>
             </div>
         );
     }

@@ -1,8 +1,7 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
-import profilePic from '../../public/assets/images/profile-pic.png';
-
-import ProfilePreviewFollowing from './ProfilePreviewFollowing';
+import profilePic from '../../public/assets/images/profile-pic.png'; 
 
 class FollowingComponent extends React.Component
 {
@@ -11,53 +10,84 @@ class FollowingComponent extends React.Component
         super(props);
 
         this.state = {
-            following: true,
+            following: [],
+            error: false,
+            users: [],
+            userId: this.props.userId,
         };
 
-        this.closeComponent = this.closeComponent.bind(this);
-    }
-    closeComponent()
-    {
-        this.setState({following: false});
-        
+        // this.handleFollowing = this.handleFollowing.bind(this);
+        // this.closeComponent = this.closeComponent.bind(this);
     }
 
+    async componentDidMount()
+    {
+        try
+        {
+            const res = await fetch(`/api/users/get-following/${this.state.userId}`);
+            const data = await res.json();
+
+            if(res.ok)
+            {
+                this.setState({following: data.data}, () => this.getUsers());
+            }
+            else
+            {
+                console.error(data.message);
+                this.setState({error: true});
+            }
+        }
+        catch(error)
+        {
+            console.error("Error getting following: ", error);
+            this.setState({error: true});
+        }
+    }
+
+    async getUsers()
+    {
+        const userPromises = this.state.following.map(async (userId) => {
+            const res = await fetch(`/api/users/${userId}`); 
+            const data = await res.json();
+            return data.data;
+        });
+
+        try 
+        {
+            const users = await Promise.all(userPromises); 
+            this.setState({ users });
+        } 
+        catch (error) 
+        {
+            console.error("Error fetching users: ", error);
+            this.setState({error: true});
+        }
+    }
+
+    displayFollowing()
+    {
+        // const limited = this.state.users.slice(0, 10);
+
+        return this.state.users.map((user) => (
+            <Link to={`/ProfilePage/${user.id}`}>
+                <img src={user.profilePicture} alt={`${user.name}'s profile`} title={`${user.name}'s profile`} />
+                <h3>{user.name} {user.surname}</h3>
+            </Link>
+        )); 
+    }
+
+    
     render()
     {
-        const { following } = this.state;
-
-        if(!this.state.following)
-        {
-            return <ProfilePreviewFollowing/>
-        }
-
         return(
             <div>
-                <h2>Following</h2>
+                <section>
+                    <h2>Following</h2>
 
-
-                {(following) && (<button onClick = {this.closeComponent}>Close</button>)}
-
-                <div>
-                    <img src = {profilePic} alt = 'Profile picture' title = 'Profile picture'/>
-                    
-                    <h3>Username</h3>
-                </div>
-                <div>
-                    <img src = {profilePic} alt = 'Profile picture' title = 'Profile picture'/>
-                    
-                    <h3>Username</h3>
-                </div>
-                <div>
-                    <img src = {profilePic} alt = 'Profile picture' title = 'Profile picture'/>
-                    
-                    <h3>Username</h3>
-                </div>
-                <div>
-                    <img src = {profilePic} alt = 'Profile picture' title = 'Profile picture'/>
-                    
-                    <h3>Username</h3>
-                </div>
+                    <div>
+                        {this.displayFollowing()} 
+                    </div>
+                </section>
             </div>
         );
     }

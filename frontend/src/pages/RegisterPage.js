@@ -24,7 +24,7 @@ const RegisterPage = () =>
 
             <h1>Register</h1>
 
-            <RegisterInfo/>
+            <RegisterInfo type='r'/>
 
             <p><small>Already have an account? <Link to = '/LoginPage'>Login here</Link></small></p>
         </main>

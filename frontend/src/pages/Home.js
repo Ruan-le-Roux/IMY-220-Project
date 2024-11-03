@@ -7,11 +7,12 @@ import Activity from '../components/Activity';
 
 const Home = () =>
 {
+    const userId = localStorage.getItem('userId');
     return(
         <div>
             <Nav/>
 
-            <MyPlaylists/>
+            <MyPlaylists userId={userId}/>
 
             <Songs/>
 

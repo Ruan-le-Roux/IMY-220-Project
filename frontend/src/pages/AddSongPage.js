@@ -6,13 +6,13 @@ import Nav from '../components/Nav';
 
 const AddSongPage = () => 
 {
-    const {id} = useParams();
+    const {id, type} = useParams();
     
     return(
         <div>
             <Nav/>
     
-            <AddSong id={id} />
+            <AddSong id={id} type={type}/>
 
         </div>
 

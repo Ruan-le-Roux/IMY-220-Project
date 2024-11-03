@@ -10,6 +10,7 @@ import RegisterPage from './pages/RegisterPage';
 import SongFeedPage from './pages/SongFeedPage';
 import SplashPage from'./pages/SplashPage';
 import AddSongPage from './pages/AddSongPage';
+import FriendsPage from './pages/FriendsPage';
 
 const router = createBrowserRouter([
     {
@@ -45,8 +46,12 @@ const router = createBrowserRouter([
         element: <ProfilePage/>
     },
     {
-        path: '/AddSongPage/:id',
+        path: '/AddSongPage/:id/:type',
         element: <AddSongPage/>
+    },
+    {
+        path: '/FriendsPage/:type',
+        element: <FriendsPage/>
     },
 ]);
 

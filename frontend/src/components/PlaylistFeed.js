@@ -27,6 +27,7 @@ class PlaylistFeed extends React.Component
                 const res = await fetch(`/api/playlists/active-playlists/${userId}`);
                 const data = await res.json();
     
+                
                 if(res.ok)
                 {
                     this.setState({playlists: data.data});
@@ -44,6 +45,7 @@ class PlaylistFeed extends React.Component
     
                 if(res.ok)
                 {
+                    console.log(`here is the playlists: ${data.data}`);
                     this.setState({playlists: data.data});
                 }
                 else
@@ -102,6 +104,7 @@ class PlaylistFeed extends React.Component
         }
         else
         {
+            console.log(`All playlists: ${this.state.playlists}`);
             return (
                 <div>
                     <h1>Playlist Feed</h1>

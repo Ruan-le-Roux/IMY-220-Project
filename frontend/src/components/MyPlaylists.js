@@ -16,6 +16,7 @@ class MyPlaylists extends React.Component
             playlists: [],    
             error: false,
             errorMessage: '',
+            userId: this.props.userId
 
         };
 
@@ -31,9 +32,8 @@ class MyPlaylists extends React.Component
     {
         try
         {
-            const userId = localStorage.getItem('userId');
 
-            const res = await fetch(`/api/playlists/my-playlists/${userId}`);
+            const res = await fetch(`/api/playlists/my-playlists/${this.state.userId}`);
             const data = await res.json();
 
             if(res.ok)
@@ -51,6 +51,22 @@ class MyPlaylists extends React.Component
             console.error('Error getting my playlists: ', error);
         }
     }
+
+    refreshPlaylists = async () => {
+        try {
+            const res = await fetch(`/api/playlists/my-playlists/${this.state.userId}`);
+            const data = await res.json();
+
+            if (res.ok) {
+                this.setState({ playlists: data.data });
+            } else {
+                console.error(data.message);
+                this.setState({ error: true, errorMessage: data.message });
+            }
+        } catch (error) {
+            console.error('Error getting my playlists: ', error);
+        }
+    };
 
     render()
     {
@@ -82,7 +98,7 @@ class MyPlaylists extends React.Component
                         this.state.playlists.map((playlist) => (
                             <section key={playlist.id}>
                                 <Link to={`/playlistPage/${playlist.id}`}>
-                                    <img src={playlistPic} alt={`Cover of ${playlist.name}`} title="Picture of Playlist" />
+                                    <img src={playlist.coverImage} alt={`Cover of ${playlist.name}`} title="Picture of Playlist" />
                                     
                                     <div>
                                         <h4>{playlist.name}</h4>

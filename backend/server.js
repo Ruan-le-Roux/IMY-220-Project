@@ -711,6 +711,65 @@ app.put("/api/users/unfollow/:id", async (req, res) => {
     }
 });
 
+//get following
+app.get("/api/users/get-following/:id", async (req, res) => {
+    const {id} = req.params;
+
+    try
+    {
+        const userExists = await existingUser(false, id);
+
+        if(userExists === false)
+        {
+            return res.status(404).json({status: "failed", message: "Could not find user"});
+        }
+
+        const user = await db.collection('users').findOne({id: parseInt(id)});
+
+        if(user.following.length === 0)
+        {
+            return res.status(404).json({status: "failed", message: "User has no following"});
+        }
+
+        return res.status(200).json({status: "success", data: user.following});
+    }
+    catch(error)
+    {
+        console.error("Error when getting following: ", error);
+        return res.status(500).json({status: "failed", message: "Could not get following"});
+    }
+});
+
+
+//get followers
+app.get("/api/users/get-followers/:id", async (req, res) => {
+    const {id} = req.params;
+
+    try
+    {
+        const userExists = await existingUser(false, id);
+
+        if(userExists === false)
+        {
+            return res.status(404).json({status: "failed", message: "Could not find user"});
+        }
+
+        const user = await db.collection('users').findOne({id: parseInt(id)});
+
+        if(user.followers.length === 0)
+        {
+            return res.status(404).json({status: "failed", message: "User has no followers"});
+        }
+
+        return res.status(200).json({status: "success", data: user.followers});
+    }
+    catch(error)
+    {
+        console.error("Error when getting followers: ", error);
+        return res.status(500).json({status: "failed", message: "Could not get followers"});
+    }
+});
+
 
 //playlists
 //create playlists
@@ -728,7 +787,7 @@ app.post("/api/playlist/create-playlist", upload.single('coverImage'), async (re
             return res.status(400).json({status: "Failed", message: "userId and category are required"});
         }
 
-        const existingUser = await db.collection("users").findOne({id: userId});
+        const existingUser = await db.collection("users").findOne({id: parseInt(userId)});
 
         if(!existingUser)
         {
@@ -737,10 +796,11 @@ app.post("/api/playlist/create-playlist", upload.single('coverImage'), async (re
 
         const id = await generatePlaylistId();
         const date = getDate();
+        const userId2 = parseInt(userId);
 
         const newPlaylist = {
             id,
-            userId,
+            "userId": userId2,
             name: name || `playlist ${id}`,
             category: category || '',
             description: description || '',
@@ -757,7 +817,7 @@ app.post("/api/playlist/create-playlist", upload.single('coverImage'), async (re
         const result = await db.collection("playlists").insertOne(newPlaylist);
 
         const updateUsers = await db.collection("users").updateOne(
-            { id: userId },
+            { id: parseInt(userId) },
             {$push: {playlists: id}}
         );
 
@@ -941,38 +1001,34 @@ app.get("/api/playlists/:id", async (req, res) => {
 //add song to playlist
 app.put("/api/playlists/add-song/:id/:userId", async (req, res) => {
     const { id, userId } = req.params;
-    const { songId } = req.body; // Assuming songId is an array
+    const { songId } = req.body; 
 
-    try {
-        // Check if the playlist exists
+    try 
+    {
         const playlistExists = await existingPlaylist(id);
         if (!playlistExists) {
             return res.status(404).json({ status: "failed", message: `Playlist with id ${id} does not exist` });
         }
 
-        // Check if the user exists
         const userExists = await existingUser(false, userId);
         if (!userExists) {
             return res.status(404).json({ status: "failed", message: `User does not exist` });
         }
 
-        // Check if all songs exist
         const songExistsResults = await Promise.all(songId.map(song => existingSong(song)));
-        const allSongsExist = songExistsResults.every(Boolean); // Check if all results are true
+        const allSongsExist = songExistsResults.every(Boolean); 
 
         if (!allSongsExist) {
             return res.status(404).json({ status: "failed", message: `One or more songs do not exist` });
         }
 
-        // Check if any of the songs are already in the playlist
         const existingSongs = await Promise.all(songId.map(song => songInPlaylist(song, id)));
-        const anySongExistsInPlaylist = existingSongs.some(Boolean); // Check if any song is already in the playlist
+        const anySongExistsInPlaylist = existingSongs.some(Boolean); 
 
         if (anySongExistsInPlaylist) {
             return res.status(409).json({ status: "failed", message: "One or more songs are already in the playlist" });
         }
 
-        // Proceed to add songs to the playlist
         for (const song of songId) {
             const songDetails = await db.collection("songs").findOne({ id: parseInt(song), deleted: false });
 
@@ -1094,7 +1150,7 @@ app.put("/api/playlists/add-comment/:id/:userId", upload.single('image'), async 
 
         const commentId = await generateCommentId(id);
 
-        const imageUrl = req.file ? `http://localhost:3000/assets/images/${req.file.filename}` : `http://localhost:3000/assets/images/album-cover.png`;
+        const imageUrl = req.file ? `http://localhost:3000/assets/images/${req.file.filename}` : `no`;
 
         const intId = parseInt(userId);
 
@@ -1212,9 +1268,9 @@ app.get("/api/playlists/comments/:id", async (req, res) => {
 
         const playlist = await db.collection("playlists").findOne({id : parseInt(id)});
 
-        if(playlist.comments.length <= 0)
+       if (!playlist || !Array.isArray(playlist.comments) || playlist.comments.length === 0) 
         {
-            return res.status(404),json({status: "failed", message: "THere are no comments on this playlist"});            
+            return res.status(404).json({ status: "failed", message: "There are no comments on this playlist" });
         }
 
         return res.status(200).json({status: "success", data: playlist.comments});

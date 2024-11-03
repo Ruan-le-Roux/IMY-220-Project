@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 import profilePic from '../../public/assets/images/profile-pic.png'
 
@@ -137,12 +138,20 @@ class CommentComponent extends React.Component
                 <div key={comment.comment.id}>
                     <p>{comment.comment.text}</p>
                     
-                    <img src={comment.comment.image} alt="picture someone commented" title="picture someone commented"/>
+                    {comment.comment.image !== "no" && (
+                        <img
+                            src={comment.comment.image}
+                            alt="picture someone commented"
+                            title="picture someone commented"
+                        />
+                    )}
 
                     <section>
-                        <img src={comment.profilePic} alt="users profile picture" title="users profile picture"/>
+                        <Link to={`/ProfilePage/${comment.comment.userId}`}>
+                            <img src={comment.profilePic} alt="users profile picture" title="users profile picture"/>
 
-                        <p>{comment.name} {comment.surname}</p>
+                            <p>{comment.name} {comment.surname}</p>                        
+                        </Link>
                     </section>
                 </div>
             ));

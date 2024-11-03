@@ -33,6 +33,12 @@ class ProfileInfoForm extends React.Component
         this.setState({[e.target.name]: e.target.value});
     };
 
+    handleImage = (event) => 
+    {
+        const file = event.target.files[0];
+        this.setState({ profilePic: file });
+    }
+
     submitForm = async (e) => 
     {
         e.preventDefault();
@@ -40,7 +46,7 @@ class ProfileInfoForm extends React.Component
 
         const 
         {
-            profilePicture,
+            profilePic,
             bio,
             instagram,
             facebook,
@@ -48,22 +54,24 @@ class ProfileInfoForm extends React.Component
             twitter,
         } = this.state;
 
+        const formData = new FormData();
+        const userId = parseInt(localStorage.getItem('userId'), 10);
+        if (profilePic) 
+        {
+            formData.append('profilePicture', profilePic);
+        }
+        formData.append('bio', bio);
+        formData.append('instagram', instagram);
+        formData.append('facebook', facebook);
+        formData.append('tiktok', tiktok);
+        formData.append('twitter', twitter);
+
         try
         {
             const userId = localStorage.getItem('userId');
             const res = await fetch(`/api/users/update-user/${userId}`, {
                 method: 'PUT',
-                headers: 
-                {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    profilePicture, 
-                    bio, instagram, 
-                    facebook, 
-                    tiktok, 
-                    twitter, 
-                })
+                body: formData
             });
 
             const data = await res.json();
@@ -98,14 +106,14 @@ class ProfileInfoForm extends React.Component
         }
         return(
             <div>
-                    <form onSubmit = { this.submitForm }>
+                <form onSubmit = { this.submitForm }>
                         {errorMessage && <div style = {{color: 'red'}}>{errorMessage}</div>}
 
 
                         <label>
                             Profile Picture:
 
-                            <input type = "file" name = 'profilePicture' accept = "image/*" onChange={this.handleChange}/>
+                            <input type = "file" name = 'profilePic' onChange={this.handleImage}/>
                         </label>
                     
                         <label>

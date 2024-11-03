@@ -4,11 +4,8 @@ import { faEllipsis } from '@fortawesome/free-solid-svg-icons';
 
 import albumPic from '../../public/assets/images/album-cover.png';
 
-
-class DisplaySongs extends React.Component
-{
-    constructor(props)
-    {
+class DisplaySongs extends React.Component {
+    constructor(props) {
         super(props);
 
         this.state = {
@@ -18,36 +15,32 @@ class DisplaySongs extends React.Component
             playlists: [],
             showContextMenu: false,
             selectedSong: null,
+            owner: '',
+            userId: localStorage.getItem('userId'),
         };
 
         this.displaySongs = this.displaySongs.bind(this);
         this.handleOutSideClick = this.handleOutSideClick.bind(this);
     }
 
-    async componentDidMount()
-    {
-        const {id} = this.state;
+    async componentDidMount() {
+        const { id } = this.state;
 
-        try
-        {
+        try {
             const res = await fetch(`/api/playlists/get-songs/${id}`);
             const data = await res.json();
 
             console.log("data: ", data.data);
-    
-            if(res.ok)
-            {
-                this.setState({songs: data.data});
-            }
-            else
-            {
+
+            if (res.ok) {
+                this.setState({ songs: data.data });
+            } else {
                 console.error(data.message);
+                this.setState({ noSongs: true });
             }
-        }
-        catch(error)
-        {
+        } catch (error) {
             console.error('Error when getting all songs in playlist: ', error);
-            this.setState({noSongs: true});
+            this.setState({ noSongs: true });
         }
 
         await this.fetchPlaylists();
@@ -55,37 +48,28 @@ class DisplaySongs extends React.Component
         document.addEventListener('click', this.handleOutSideClick);
     }
 
-    componentWillUnmount()
-    {
+    componentWillUnmount() {
         window.removeEventListener('click', this.handleOutSideClick);
     }
 
-    async fetchPlaylists()
-    {
-        try
-        {
+    async fetchPlaylists() {
+        try {
             const userId = localStorage.getItem('userId');
-            const res = await fetch(`/api/playlists/my-playlists/${userId}`);
+            const res = await fetch(`/api/playlists/${this.state.id}`);
             const data = await res.json();
             console.log("My playlists: ", data.data);
-    
-            if(res.ok)
-            {
-                this.setState({playlists: data.data});
-            }
-            else
-            {
+
+            if (res.ok) {
+                this.setState({ playlists: data.data });
+            } else {
                 console.error(data.message);
             }
-        }
-        catch(error)
-        {
+        } catch (error) {
             console.error('Error fetching users playlists: ', error);
         }
     }
 
-    toggleContextMenu(event, song)
-    {
+    toggleContextMenu(event, song) {
         event.stopPropagation();
 
         this.setState((prevState) => ({
@@ -94,65 +78,58 @@ class DisplaySongs extends React.Component
         }));
     }
 
-    handleOutSideClick(event)
-    {
-        if (this.state.showContextMenu && this.contextMenuRef && !this.contextMenuRef.contains(event.target)) 
-        {
+    handleDeleteSong = async () => {
+        const { selectedSong } = this.state;
+        if (selectedSong) {
+            await this.deleteSong(selectedSong.id);
             this.setState({ showContextMenu: false });
         }
     }
 
-    async addToPlaylist(playlist)
-    {
+    handleOutSideClick(event) {
+        if (this.state.showContextMenu && this.contextMenuRef && !this.contextMenuRef.contains(event.target)) {
+            this.setState({ showContextMenu: false });
+        }
+    }
+
+    async addToPlaylist(playlist) {
         const { selectedSong } = this.state;
         console.log(`Adding ${selectedSong.title} to playlist with ID: ${playlist.id}`);
 
-        try
-        {
+        try {
             const userId = parseInt(localStorage.getItem('userId'), 10);
-            console.log("before api call: ", "playlistId: ", playlist.id, "songId: ", selectedSong.id, " userId ", userId, "playlist user id", playlist.userId);
-            const res = await fetch(`/api/playlists/add-song/${playlist.id}`, {
+            const res = await fetch(`/api/playlists/add-song/${playlist.id}/${userId}`, {
                 method: 'PUT',
-                headers:
-                {
+                headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(
                     {
-                        "songId": selectedSong.id,
+                        "songId": [selectedSong.id],
                         "userId": userId
                     }
                 )
             });
             const message = await res.json();
-            
-            if(res.ok)
-            {
-                window.alert(`Song ${selectedSong.title} added to playlist ${playlist.name}`);
-                this.setState({showContextMenu: false});
-            }
-            else
-            {
+
+            if (res.ok) {
+                this.setState({ showContextMenu: false });
+            } else {
                 window.alert(`Could not add song to playlist`);
                 console.error(message.message);
             }
-        }
-        catch(error)
-        {
+        } catch (error) {
             console.error("Error when adding song to playlist: ", error);
             window.alert(`Could not add song to playlist`);
         }
     }
 
-    async deleteSong(songId)
-    {
-        try
-        {
+    async deleteSong(songId) {
+        try {
             const userId = parseInt(localStorage.getItem('userId'), 10);
-            const res = await fetch(`/api/playlists/delete-song/${songId}`, {
+            const res = await fetch(`/api/playlists/delete-song/${this.state.id}`, {
                 method: 'PUT',
-                headers:
-                {
+                headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(
@@ -163,61 +140,48 @@ class DisplaySongs extends React.Component
                 )
             });
             const message = await res.json();
-    
-            if(res.ok)
-            {
-                window.alert("Song deleted from playlist");
-                this.setState({showContextMenu: false});
-            }
-            else
-            {
+
+            if (res.ok) {
+                this.setState((prevState) => ({
+                    songs: prevState.songs.filter(song => song.id !== songId),
+                    showContextMenu: false
+                }));
+            } else {
                 window.alert(`Could not delete song from playlist`);
                 console.error(message.message);
             }
-        }
-        catch(error)
-        {
+        } catch (error) {
             console.error("Error when deleting song from playlist: ", error);
             window.alert(`Could not delete song from playlist`);
         }
     }
 
-    displaySongs()
-    {
-        const {songs} = this.state;
-        const userId = localStorage.getItem('userId');
+    displaySongs() {
+        const { songs } = this.state;
 
         return songs.map((song, i) => {
-
-            return(
+            return (
                 <div key={song.id}>
                     <p>{i + 1}</p>
-
-                    <img src = {albumPic} alt = 'Album cover' title = 'Album cover'/>                    
-
                     <h2>{song.title}</h2>
-
                     <p>{song.artist}</p>
-
                     <p>{song.timestamp}</p>
-
                     <iframe src={song.embedUrl} width="300" height="380" frameBorder="0" allowtransparency="true" allow="encrypted-media"></iframe>
-
-                    <FontAwesomeIcon icon = {faEllipsis} onClick={(e) => this.toggleContextMenu(e, song)}/>
+                    <FontAwesomeIcon icon={faEllipsis} onClick={(e) => this.toggleContextMenu(e, song)} />
 
                     {this.state.showContextMenu && this.state.selectedSong === song && (
                         <div
                             className="context-menu"
                             ref={(node) => { this.contextMenuRef = node; }}
-                            style={{ position: 'absolute', background: 'white', border: '1px solid #ccc', padding: '10px' }}
-                        >
+                            style={{ position: 'absolute', background: 'white', border: '1px solid #ccc', padding: '10px' }}>
                             <h4>Select Playlist:</h4>
-                            {this.props.ownerId === userId && (
-                                <p onClick={() => this.deleteSong(song.id)} style={{ cursor: 'pointer' }}>
+                            
+                            {parseInt(this.state.playlists.userId) === parseInt(this.state.userId) && 
+                                <p onClick={this.handleDeleteSong} style={{ cursor: 'pointer' }}>
                                     Delete Song
                                 </p>
-                            )}
-
+                            
+                            }
                             <p onClick={() => this.setState({ showPlaylists: !this.state.showPlaylists })} style={{ cursor: 'pointer' }}>
                                 Add Song to Playlist
                             </p>
@@ -235,26 +199,16 @@ class DisplaySongs extends React.Component
                         </div>
                     )}
                 </div>
-
             );
-
-
-        })
-
-        
-
-
+        });
     }
 
-
-    render()
-    {
-        if(this.state.noSongs === true)
-        {
+    render() {
+        if (this.state.noSongs === true) {
             return <h1>No songs in this playlist</h1>;
         }
 
-        return(
+        return (
             <div>
                 {this.displaySongs()}
             </div>
@@ -263,4 +217,3 @@ class DisplaySongs extends React.Component
 }
 
 export default DisplaySongs;
-

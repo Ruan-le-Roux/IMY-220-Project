@@ -120,6 +120,37 @@ class PlaylistComponent extends React.Component
         }
     }
 
+    async deleteSong(songId)
+    {
+        try
+        {
+            const userId = localStorage.getItem('userId');
+            const res = await fetch(`/api/playlists/delete-song/${this.state.id}`, {
+                method: 'PUT',
+                body: JSON.stringify({
+                    "songId": songId,
+                    "userId": userId
+                })
+            });
+            const data = await res.json();
+
+            if(res.ok)
+            {
+                this.componentDidMount();
+            }
+            else
+            {
+                window.alert("Could not delete song: ", data.message);
+                console.error(data.message);
+            }
+        }
+        catch(error)
+        {
+            console.error("Error when deleing song from playlist: ", error);
+            window.alert("Could not delete song");
+        }
+    }
+
     handleDelete()
     {
         this.setState({delete: true});
@@ -223,7 +254,7 @@ class PlaylistComponent extends React.Component
                     </div>
 
                     <div>
-                        <DisplaySongs id={this.state.id}/>
+                        <DisplaySongs id={this.state.id} isOwner={this.state.isOwner} onDeleteSong={(songId) => this.deleteSong(songId)}/>
                     </div>
                 </div>
 
@@ -293,7 +324,7 @@ class PlaylistComponent extends React.Component
 
         if(this.state.addSong)
         {
-            return <Navigate to = {`/AddSongPage/${id}`}/>
+            return <Navigate to = {`/AddSongPage/${id}/p`}/>
         }
 
         if(this.state.home)

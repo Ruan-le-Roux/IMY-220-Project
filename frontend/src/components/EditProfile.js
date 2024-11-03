@@ -8,9 +8,10 @@ class EditProfile extends React.Component
 {
     render()
     {
+        const userId = localStorage.getItem('userId');
         return(
             <div>
-                <RegisterInfoForm/>
+                <RegisterInfoForm type='p'userId={userId} onUpdate={this.props.onUpdate} onClose={this.props.onClose}/>
             </div>
         );
     }
