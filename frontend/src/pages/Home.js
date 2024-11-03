@@ -9,15 +9,18 @@ const Home = () =>
 {
     const userId = localStorage.getItem('userId');
     return(
-        <div>
-            <Nav/>
+        <div className="bg-cBlue min-h-screen text-cWhite">
+            <Nav />
 
-            <MyPlaylists userId={userId}/>
-
-            <Songs/>
-
-            <Activity/>
+            <div className="container mx-auto p-6 space-y-8">
+                <MyPlaylists userId={userId} />
+                
+                <Songs />
+                
+                <Activity />
+            </div>
         </div>
+
     );
 }
 

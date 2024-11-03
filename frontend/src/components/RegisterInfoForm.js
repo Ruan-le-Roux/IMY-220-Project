@@ -155,96 +155,210 @@ class RegisterInfoForm extends React.Component
         if(type === 'p')
         {
             return(
-                <form onSubmit = {this.submitForm}>
+                <div className="bg-cWhite p-6 rounded-lg max-w-md mx-auto">
+                    <form onSubmit={this.submitForm} className="flex flex-col space-y-4">
+                        {errorMessage && <div className="text-red-500">{errorMessage}</div>}
 
-                    {errorMessage && <div style = {{color: 'red'}}>{errorMessage}</div>}
+                        <label className="flex flex-col">
+                            <span className="text-cBlack">Name: <span className="text-red-500">*</span></span>
+                            <input
+                                type="text"
+                                name="name"
+                                value={name}
+                                placeholder="name"
+                                required
+                                onChange={this.handleChange}
+                                className="p-2 border rounded-lg shadow-md focus:outline-none focus:ring focus:ring-cPink"
+                            />
+                        </label>
 
-                    <label>
-                        Name: <span>*</span>
-                        <input type = "text" name = 'name' value={name} placeholder = "name" onChange = {this.handleChange}/>
-                    </label>
+                        <label className="flex flex-col">
+                            <span className="text-cBlack">Surname: <span className="text-red-500">*</span></span>
+                            <input
+                                type="text"
+                                name="surname"
+                                value={surname}
+                                placeholder="surname"
+                                required
+                                onChange={this.handleChange}
+                                className="p-2 border rounded-lg shadow-md focus:outline-none focus:ring focus:ring-cPink"
+                            />
+                        </label>
 
-                    <label>
-                        Surname: <span>*</span>
-                        <input type = "text" name = 'surname' value={surname} placeholder = "surname" onChange = {this.handleChange}/>
-                    </label>
+                        <label className="flex flex-col">
+                            <span className="text-cBlack">Email: <span className="text-red-500">*</span></span>
+                            <input
+                                type="email"
+                                name="email"
+                                value={email}
+                                placeholder="example@email.com"
+                                required
+                                onChange={this.handleChange}
+                                className="p-2 border rounded-lg shadow-md focus:outline-none focus:ring focus:ring-cPink"
+                            />
+                        </label>
 
-                    <label>
-                        Email: <span>*</span>
-                        <input type = "email" name = 'email' value={email} placeholder = "example@emai.com" onChange = {this.handleChange}/>
-                    </label>
+                        <label className="flex flex-col">
+                            <span className="text-cBlack">Password: <span className="text-red-500">*</span></span>
+                            <input
+                                type="password"
+                                name="password"
+                                value={password}
+                                placeholder="Password1010!"
+                                required
+                                onChange={this.handleChange}
+                                className="p-2 border rounded-lg shadow-md focus:outline-none focus:ring focus:ring-cPink"
+                            />
+                        </label>
 
-                    <label>
-                        Password: <span>*</span>
-                        <input type = "text" name = 'password' value={password} placeholder = "Password1010!" onChange = {this.handleChange}/>
-                    </label>
+                        <label className="flex flex-col">
+                            <span className="text-cBlack">Profile Picture:</span>
+                            <input
+                                type="file"
+                                name="profilePic"
+                                onChange={this.handleImage}
+                                className="mt-1"
+                            />
+                        </label>
 
-                    <label>
-                        Profile Picture:
+                        <label className="flex flex-col">
+                            <span className="text-cBlack">Bio: <span className="text-red-500">*</span></span>
+                            <textarea
+                                rows="4"
+                                name="bio"
+                                value={bio}
+                                placeholder="Short bio about myself"
+                                onChange={this.handleChange}
+                                className="p-2 border rounded-lg shadow-md focus:outline-none focus:ring focus:ring-cPink"
+                            ></textarea>
+                        </label>
 
-                        <input type = "file" name = 'profilePic' onChange={this.handleImage}/>
-                    </label>
-                
-                    <label>
-                        Bio: <span>*</span>
-                        <textarea rows = "4"cols = "50" name = 'bio' value={bio} placeholder = "Short bio about myself" onChange={this.handleChange}></textarea>
-                    </label>
+                        <p className="font-semibold">Other social accounts:</p>
 
-                    <p>Other social accounts:</p> 
+                        <label className="flex items-center">
+                            <img src={Instagram} alt="Instagram logo" title="Instagram logo" className="w-6 h-6 mr-2" />
+                            <input
+                                type="text"
+                                name="instagram"
+                                value={instagram}
+                                onChange={this.handleChange}
+                                placeholder="link to your Instagram account"
+                                className="p-2 border rounded-lg shadow-md focus:outline-none focus:ring focus:ring-cPink flex-1"
+                            />
+                        </label>
 
-                    <label>
-                        <img src = {Instagram} alt = "Instagram logo" title = "Instagram logo"/>
-                        <input type = "text" name = 'instagram' value={instagram}onChange={this.handleChange} placeholder = "link to your Instagram account" />
-                    </label>
+                        <label className="flex items-center">
+                            <img src={Facebook} alt="Facebook logo" title="Facebook logo" className="w-6 h-6 mr-2" />
+                            <input
+                                type="text"
+                                name="facebook"
+                                value={facebook}
+                                onChange={this.handleChange}
+                                placeholder="link to your Facebook account"
+                                className="p-2 border rounded-lg shadow-md focus:outline-none focus:ring focus:ring-cPink flex-1"
+                            />
+                        </label>
 
-                    <label>
-                        <img src = {Facebook} alt = "Facebook logo" title = "Facebook logo"/>
-                        <input type = "text" name = 'facebook' value={facebook}onChange={this.handleChange} placeholder = "link to your Facebook account" />
-                    </label>
+                        <label className="flex items-center">
+                            <img src={Tiktok} alt="TikTok logo" title="TikTok logo" className="w-6 h-6 mr-2" />
+                            <input
+                                type="text"
+                                name="tiktok"
+                                value={tiktok}
+                                onChange={this.handleChange}
+                                placeholder="link to your TikTok account"
+                                className="p-2 border rounded-lg shadow-md focus:outline-none focus:ring focus:ring-cPink flex-1"
+                            />
+                        </label>
 
-                    <label>
-                        <img src = {Tiktok} alt = "TikTok logo" title = "TikTok logo"/>
-                        <input type = "text" name = 'tiktok' value={tiktok}onChange={this.handleChange} placeholder = "link to your TikTok account" />
-                    </label>
+                        <label className="flex items-center">
+                            <img src={Twitter} alt="Twitter logo" title="Twitter logo" className="w-6 h-6 mr-2" />
+                            <input
+                                type="text"
+                                name="twitter"
+                                value={twitter}
+                                onChange={this.handleChange}
+                                placeholder="link to your Twitter account"
+                                className="p-2 border rounded-lg shadow-md focus:outline-none focus:ring focus:ring-cPink flex-1"
+                            />
+                        </label>
 
-                    <label>
-                        <img src = {Twitter} alt = "Twitter logo" title = "Twitter logo"/>
-                        <input type = "text" name = 'twitter' value={twitter} onChange={this.handleChange}  placeholder = "link to your Twitter account" />
-                    </label>
-
-
-                    <button type = "submit">Set up profile!</button>
-                </form>
+                        <button
+                            type="submit"
+                            className="bg-cBlue text-white p-2 rounded-lg hover:bg-cPink transition duration-200"
+                        >
+                            Set up profile!
+                        </button>
+                    </form>
+                </div>
             );
         }
         else
         {
             return(
-                <form onSubmit = {this.submitForm}>
+                <form onSubmit={this.submitForm} className="max-w-md mx-auto p-6 rounded-lg bg-cWhite">
+                    {errorMessage && (
+                        <div className="text-red-500 mb-4">{errorMessage}</div>
+                    )}
 
-                    {errorMessage && <div style = {{color: 'red'}}>{errorMessage}</div>}
-
-                    <label>
-                        Name: <span>*</span>
-                        <input type = "text" name = 'name' value={name} placeholder = "name" required onChange = {this.handleChange}/>
+                    <label className="block mb-4">
+                        <span className="text-cBlack">Name: <span className="text-red-500">*</span></span>
+                        <input
+                            type="text"
+                            name="name"
+                            value={name}
+                            placeholder="Enter your name"
+                            required
+                            onChange={this.handleChange}
+                            className="w-full p-2 border  rounded-md mt-1 focus:outline-none focus:ring focus:ring-cPink"
+                        />
                     </label>
 
-                    <label>
-                        Surname: <span>*</span>
-                        <input type = "text" name = 'surname' value={surname} placeholder = "surname" required  onChange = {this.handleChange}/>
+                    <label className="block mb-4">
+                        <span className="text-cBlack">Surname: <span className="text-red-500">*</span></span>
+                        <input
+                            type="text"
+                            name="surname"
+                            value={surname}
+                            placeholder="Enter your surname"
+                            required
+                            onChange={this.handleChange}
+                            className="w-full p-2 border rounded-md mt-1 focus:outline-none focus:ring focus:ring-cPink"
+                        />
                     </label>
 
-                    <label>
-                        Email: <span>*</span>
-                        <input type = "email" name = 'email' value={email} placeholder = "example@emai.com" required  onChange = {this.handleChange}/>
+                    <label className="block mb-4">
+                        <span className="text-cBlack">Email: <span className="text-red-500">*</span></span>
+                        <input
+                            type="email"
+                            name="email"
+                            value={email}
+                            placeholder="example@email.com"
+                            required
+                            onChange={this.handleChange}
+                            className="w-full p-2 border rounded-md mt-1 focus:outline-none focus:ring focus:ring-cPink"
+                        />
                     </label>
 
-                    <label>
-                        Password: <span>*</span>
-                        <input type = "text" name = 'password' value={password} placeholder = "Password1010!" required  onChange = {this.handleChange}/>
+                    <label className="block mb-4">
+                        <span className="text-cBlack">Password: <span className="text-red-500">*</span></span>
+                        <input
+                            type="password"
+                            name="password"
+                            value={password}
+                            placeholder="Password1010!"
+                            required
+                            onChange={this.handleChange}
+                            className="w-full p-2 border  rounded-md mt-1 focus:outline-none focus:ring focus:ring-cPink"
+                        />
                     </label>
 
-                    <button type = "submit">Set up profile!</button>
+                    <button
+                        type="submit"
+                        className="w-full py-2 bg-cBlue text-white rounded-md hover:bg-cPink transition duration-200 focus:outline-none focus:ring focus:ring-cPink"
+                    >
+                        Set up profile!
+                    </button>
                 </form>
             );
 

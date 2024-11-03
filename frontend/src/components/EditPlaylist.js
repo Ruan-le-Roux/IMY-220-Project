@@ -97,42 +97,82 @@ class EditPlaylist extends React.Component
             return <PlaylistComponent playlistId={this.state.id}/>;
         }
         return(
-            <div>
-                <h1>Edit Playlist</h1>
-                <form onSubmit = {this.handleSubmit}>
-                    <label>
-                        Name:
+            <div className="p-4 bg-gray-100 rounded-lg shadow-md">
+                <h1 className="text-xl font-bold mb-4">Edit Playlist</h1>
+                <form onSubmit={this.handleSubmit} className="space-y-4">
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700">
+                            Name:
+                            <input 
+                                name='name' 
+                                type='text' 
+                                placeholder='playlist name' 
+                                value={name} 
+                                onChange={this.handleChange} 
+                                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                            />
+                        </label>
+                    </div>
 
-                        <input name='name' type = 'text' placeholder = 'playlist name' value={name} onChange={this.handleChange}/>
-                    </label>
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700">
+                            Category:
+                            <input 
+                                name='category' 
+                                type='text' 
+                                placeholder='Category' 
+                                value={category} 
+                                onChange={this.handleChange} 
+                                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                            />
+                        </label>
+                    </div>
 
-                    <label>
-                        Category:
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700">
+                            Short description:
+                            <textarea 
+                                name='description' 
+                                placeholder='Description' 
+                                value={description} 
+                                onChange={this.handleChange} 
+                                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                            />
+                        </label>
+                    </div>
 
-                        <input name='category' type = 'text' placeholder = 'Category' value={category} onChange={this.handleChange}/>
-                    </label>
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700">
+                            Cover Image:
+                            <input 
+                                name='coverImage' 
+                                type='file' 
+                                onChange={this.handleFileChange} 
+                                className="mt-1 block w-full text-gray-700 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                            />
+                        </label>
+                    </div>
 
-                    <label>
-                        Short description:
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700">
+                            Hashtags:
+                            <textarea 
+                                name='hashTags' 
+                                placeholder='example' 
+                                value={hashTags} 
+                                onChange={this.handleChange} 
+                                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                            />
+                        </label>
+                    </div>
 
-                        <textarea name = 'description' placeholder = 'Description' value={description} onChange={this.handleChange}></textarea>
-                    </label>
-
-                    <label>
-                        Cover Image:
-
-                        <input name='coverImage' type = 'file' onChange={this.handleFileChange}/>
-                    </label>
-
-                    <label>
-                        Hashtags:
-
-                        <textarea  name='hashTags' placeholder = 'example' value={hashTags} onChange={this.handleChange}></textarea>
-                    </label>
-
-                    <button type = 'submit'>Make changes</button>
+                    <button 
+                        type='submit' 
+                        className="w-full py-2 px-4 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition duration-200"
+                    >
+                        Make changes
+                    </button>
                 </form>
-
             </div>
         );
     }

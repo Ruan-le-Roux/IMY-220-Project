@@ -39,11 +39,11 @@ class AddSong extends React.Component
     {
         e.preventDefault();
 
-        console.log(`type: ${this.state.type}`);
+        // console.log(`type: ${this.state.type}`);
 
         if(this.state.type === 's')
         {
-            console.log(`this is the type: ${type}`);
+            // console.log(`this is the type: ${type}`);
             try
             {
                 const userId = parseInt(localStorage.getItem('userId'));
@@ -212,9 +212,13 @@ class AddSong extends React.Component
         {
             // const limitedSongs = songs.splice(0, 20);
             return songs.map((song) => (
-                <section key={song.id} onClick={() => this.handleSongSelect(song.id)}>
-                    <h1>{song.title}</h1>
-                    <p>{song.artist}</p>
+                <section
+                    key={song.id}
+                    onClick={() => this.handleSongSelect(song.id)}
+                    className="p-4 mb-4 bg-white shadow-md rounded-lg cursor-pointer hover:bg-gray-100 transition duration-200"
+                >
+                    <h1 className="text-lg font-bold text-cBlack">{song.title}</h1>
+                    <p className="text-sm text-gray-600">{song.artist}</p>
                 </section>
             ));
 
@@ -249,37 +253,72 @@ class AddSong extends React.Component
         }
 
         return(
-            <div>
-                <form onSubmit = {this.handleSubmit}>
-                    <h1>Add a new song</h1>
+            <div className="p-6 bg-cBlue rounded-lg shadow-lg h-lvh">
+                <form onSubmit={this.handleSubmit} className="space-y-4">
+                    <h1 className="text-2xl font-bold text-cBlack">Add a new song</h1>
 
-                    <label>
-                        Song name:<span>*</span>
-
-                        <input type = 'text' name='name' placeholder = 'name' value={name} required onChange={this.handleChange}/>
+                    <label className="block">
+                        <span className="text-cBlack">Song name:<span className="text-red-500">*</span></span>
+                        <input
+                            type="text"
+                            name="name"
+                            placeholder="name"
+                            value={name}
+                            required
+                            onChange={this.handleChange}
+                            className="mt-1 block w-full p-2 border border-cBlack rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                        />
                     </label>
 
-                    <label>
-                        Artist:<span>*</span>
-
-                        <input type = 'text' name='artist' placeholder = 'artist' value={artist} required onChange={this.handleChange}/>
+                    <label className="block">
+                        <span className="text-cBlack">Artist:<span className="text-red-500">*</span></span>
+                        <input
+                            type="text"
+                            name="artist"
+                            placeholder="artist"
+                            value={artist}
+                            required
+                            onChange={this.handleChange}
+                            className="mt-1 block w-full p-2 border border-cBlack rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                        />
                     </label>
 
-                    <label>
-                        Link:<span>*</span>
-
-                        <input type = 'text' name='link' placeholder = 'link' value={link} required onChange={this.handleChange}/>
+                    <label className="block">
+                        <span className="text-cBlack">Link:<span className="text-red-500">*</span></span>
+                        <input
+                            type="text"
+                            name="link"
+                            placeholder="link"
+                            value={link}
+                            required
+                            onChange={this.handleChange}
+                            className="mt-1 block w-full p-2 border border-cBlack rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                        />
                     </label>
 
-                    <button type = 'submit'>Add Song</button>
+                    <button
+                        type="submit"
+                        className="w-full bg-indigo-600 text-white py-2 rounded-md hover:bg-indigo-700 transition duration-200"
+                    >
+                        Add Song
+                    </button>
                 </form>
 
-                <h1>Choose a song</h1>
+                <h1 className="mt-8 text-xl font-semibold text-cBlack">Choose a song</h1>
 
-                {this.displaySongs()}
+                <button
+                    type="button"
+                    onClick={this.handleAddSongs}
+                    className="mt-4 bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 transition duration-200"
+                >
+                    Add Selected Songs
+                </button>
 
-                <button type='button' onClick={this.handleAddSongs}>Add Selected Songs</button>
+                <div className="mt-4">
+                    {this.displaySongs()}
+                </div>
             </div>
+
         );
     }
 }

@@ -89,21 +89,40 @@ class AddComment extends React.Component
 
 
         return(
-            <div>
-                <form onSubmit = {this.handleSubmit}>
-                    <label>
-                        Comment
-                        <textarea name='text' placeholder = 'Comment....' onChange={this.handleChange} value={text}></textarea>
-                    </label>
+            <div className="p-4 bg-gray-100 rounded-lg shadow-md">
+                <form onSubmit={this.handleSubmit} className="space-y-4">
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700">
+                            Comment
+                            <textarea 
+                                name='text' 
+                                placeholder='Comment....' 
+                                onChange={this.handleChange} 
+                                value={text} 
+                                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                            />
+                        </label>
+                    </div>
 
-                    <label>
-                        Add image
-                        <input type='file' name='image' onChange={this.handleFileChange}/>
-                    </label>
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700">
+                            Add image
+                            <input 
+                                type='file' 
+                                name='image' 
+                                onChange={this.handleFileChange} 
+                                className="mt-1 block w-full text-gray-700 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                            />
+                        </label>
+                    </div>
 
-                    <button type = 'submit'>Add Comment</button>
+                    <button 
+                        type='submit' 
+                        className="w-full py-2 px-4 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition duration-200"
+                    >
+                        Add Comment
+                    </button>
                 </form>
-
             </div>
         );
     }

@@ -130,40 +130,73 @@ class CreatePlaylist extends React.Component
             return <Navigate to = '/ProfilePage/13'/>
         }
         return(
-            <div>
-                <h1>create Playlist</h1>
-                <form onSubmit = {this.handleSubmit}>
-                    <label>
-                        Name:<span>*</span>
-
-                        <input type = 'text' name='name' value={name} placeholder = 'playlist name' required onChange={this.handleChange}/>
+            <div className="max-w-2xl mx-auto p-8 bg-white rounded-lg shadow-md">
+                <h1 className="text-3xl font-bold mb-6 text-center">Create Playlist</h1>
+                <form onSubmit={this.handleSubmit} className="space-y-6">
+                    <label className="block">
+                        <span className="block text-lg font-medium text-gray-700">Name:<span className="text-red-500">*</span></span>
+                        <input
+                            type="text"
+                            name="name"
+                            value={name}
+                            placeholder="Playlist name"
+                            
+                            onChange={this.handleChange}
+                            className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                        />
                     </label>
 
-                    <label>
-                        Category:<span>*</span>
-
-                        <input type = 'text' name='category' value={category} placeholder = 'Category' required onChange={this.handleChange}/>
+                    <label className="block">
+                        <span className="block text-lg font-medium text-gray-700">Category:<span className="text-red-500">*</span></span>
+                        <input
+                            type="text"
+                            name="category"
+                            value={category}
+                            placeholder="Category"
+                            required
+                            onChange={this.handleChange}
+                            className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                        />
                     </label>
 
-                    <label>
-                        Short description:<span>*</span>
-
-                        <textarea name = 'description' value={description} placeholder = 'Description' onChange={this.handleChange}></textarea>
+                    <label className="block">
+                        <span className="block text-lg font-medium text-gray-700">Short description:<span className="text-red-500">*</span></span>
+                        <textarea
+                            name="description"
+                            value={description}
+                            placeholder="Description"
+                            onChange={this.handleChange}
+                            className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                        ></textarea>
                     </label>
 
-                    <label>
-                        Cover Image:<span>*</span>
-
-                        <input type = 'file' name='coverImage'  onChange={this.handleFileChange}/>
+                    <label className="block">
+                        <span className="block text-lg font-medium text-gray-700">Cover Image:<span className="text-red-500">*</span></span>
+                        <input
+                            type="file"
+                            name="coverImage"
+                            onChange={this.handleFileChange}
+                            className="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                        />
                     </label>
 
-                    <label>
-                        Hashtags:<span>*</span>
-
-                        <textarea name = 'hashTags' value={hashTags} placeholder = '#example'  onChange={this.handleChange}></textarea>
+                    <label className="block">
+                        <span className="block text-lg font-medium text-gray-700">Hashtags:<span className="text-red-500">*</span></span>
+                        <textarea
+                            name="hashTags"
+                            value={hashTags}
+                            placeholder="#example"
+                            onChange={this.handleChange}
+                            className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                        ></textarea>
                     </label>
 
-                    <button type = 'submit'>Create Playlist!</button>
+                    <button
+                        type="submit"
+                        className="w-full bg-blue-600 text-white py-2 rounded-md font-semibold hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                        Create Playlist!
+                    </button>
                 </form>
             </div>
         );

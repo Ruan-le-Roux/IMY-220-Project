@@ -62,18 +62,21 @@ class Activity extends React.Component
         const limitedPlaylists = this.state.playlists.slice(0, 5);
 
         return limitedPlaylists.map((playlist) => (
-            <section key={playlist.id}>
-                <Link to={`/PlaylistPage/${playlist.id}`}>
-                    <img src = {playlistPic} alt = "Picture of Playlist" title = "Picture of Playlist"/>
-                    
-                    <div>
-                        <h4>{playlist.name}</h4>
-
-                        <p>{playlist.owner}</p>
-                    </div>
+            <section key={playlist.id} className="bg-cBlue-600 rounded-lg p-4 mb-4 shadow-md">
+            <Link to={`/PlaylistPage/${playlist.id}`} className="flex items-center">
+                <img 
+                    src={playlist.coverImage}
+                    alt={`Cover of ${playlist.name}`} 
+                    title={`Cover of ${playlist.name}`} 
+                    className="h-20 w-20 rounded-md mr-4" 
+                />
                 
-                </Link>
-            </section>
+                <div>
+                    <h4 className="text-lg font-semibold">{playlist.name}</h4>
+                    <p className="text-gray-300">{playlist.owner}</p>
+                </div>
+            </Link>
+        </section>
         ));
     }
 
@@ -90,21 +93,24 @@ class Activity extends React.Component
         if(this.state.error === true)
         {
             return (
-                <div>
-                    <h1>Activity</h1>
-
-                    <p>{this.state.errorMessage}</p>
+                <div className="p-4 shadow-md">
+                    <h1 className="text-xl font-bold">Activity</h1>
+                    <p className="text-red-500">{this.state.errorMessage}</p>
                 </div>
             );
         }
 
         return(
-            <div>
-                <h1>Activity</h1>
+            <div className="p-4 shadow-md" >
+                <h1 className="text-xl font-bold">Activity</h1>
+                <button 
+                    onClick={this.handleSeeAll} 
+                    className="bg-cPink text-white px-4 py-2 rounded-md mb-4 transition duration-200 hover:bg-cPink-dark"
+                >
+                    See All
+                </button>
 
-                <button onClick = {this.handleSeeAll}>See All</button>
-
-                <div>
+                <div className="grid grid-cols-1 gap-4">
                     {this.displayPlaylists()}
                 </div>
             </div>

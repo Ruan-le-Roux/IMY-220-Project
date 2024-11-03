@@ -19,14 +19,24 @@ import logo from '../../public/assets/images/logo.png';
 const RegisterPage = () => 
 {    
     return(
-        <main>
-            <img src = {logo} alt = "Sound Sync logo" title = "Sound sync logo"/>
+        <main className="flex flex-col items-center justify-center min-h-screen bg-cBlue p-6">
+            <div className="bg-cWhite p-8 rounded-lg shadow-lg max-w-md w-full">
+                {/* Centering the logo and heading */}
+                <div className="flex flex-col items-center mb-4">
+                    <img src={logo} alt="Sound Sync logo" title="Sound sync logo" className="mb-4" />
+                    <h1 className="text-cBlack text-2xl font-bold">Register</h1>
+                </div>
 
-            <h1>Register</h1>
+                {/* Registration Info Component */}
+                <RegisterInfo type='r' />
 
-            <RegisterInfo type='r'/>
-
-            <p><small>Already have an account? <Link to = '/LoginPage'>Login here</Link></small></p>
+                {/* Centering the bottom text */}
+                <p className="mt-4 text-center">
+                    <small className="text-cBlack">
+                        Already have an account? <Link to='/LoginPage' className="text-cPink hover:text-cPink underline">Login here</Link>
+                    </small>
+                </p>
+            </div>
         </main>
     );
 }

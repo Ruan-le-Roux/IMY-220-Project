@@ -175,21 +175,19 @@ class SongFeed extends React.Component
         if(this.state.type === 'home')
         {
             return (
-                <div>
-                    <h1>My Songs</h1>
-
-                    {this.displaySongs()}
-                </div>
+                <div className="songs-container">
+                <h1 className="text-2xl font-bold mb-4">My Songs</h1>
+                {this.displaySongs()}
+            </div>
             );
         }
         else
         {
             return (
-                <div>
-                    <h1>Song Feed</h1>
-    
-                    {this.displaySongs()}
-                </div>
+                <div className="songs-container">
+                <h1 className="text-2xl font-bold mb-4">Song Feed</h1>
+                {this.displaySongs()}
+            </div>
             );
         }
 
@@ -199,38 +197,51 @@ class SongFeed extends React.Component
     {
         const userId = parseInt(localStorage.getItem('userId'));
 
-        return this.state.songs.map((song) => (
-            <div>    
-                <iframe src={song.embedUrl} width="300" height="380" frameBorder="0" allowtransparency="true" allow="encrypted-media"></iframe>
-                
-                <h2>{song.title}</h2>
-    
-                <p>{song.artist}</p>
+        return (
+            <div className="grid grid-cols-4 gap-4">
+            {this.state.songs.map((song) => (
+                <div key={song.id} className="bg-gray-100 rounded-lg p-4 text-center">
+                    <div className="flex justify-center">
+                        <iframe 
+                            src={song.embedUrl} 
+                            width="300" 
+                            height="380" 
+                            frameBorder="0" 
+                            allowtransparency="true" 
+                            allow="encrypted-media"
+                        ></iframe>
+                    </div>
 
-                <FontAwesomeIcon icon = {faEllipsis} onClick={(e) => this.toggleContextMenu(e, song)}/>
+                    <h2 className="mt-2 text-lg font-semibold">{song.title}</h2>
+                    <p className="text-gray-600">{song.artist}</p>
+
+                    <FontAwesomeIcon 
+                        icon={faEllipsis} 
+                        onClick={(e) => this.toggleContextMenu(e, song)} 
+                        className="mt-2 cursor-pointer" 
+                    />
 
                     {this.state.showContextMenu && this.state.selectedSong === song && (
                         <div
-                            className="context-menu"
+                            className="context-menu absolute bg-white border border-gray-300 p-2 z-10" 
                             ref={(node) => { this.contextMenuRef = node; }}
-                            style={{ position: 'absolute', background: 'white', border: '1px solid #ccc', padding: '10px' }}
                         >
-                            <h4>Select Playlist:</h4>
+                            <h4 className="font-semibold">Select Playlist:</h4>
                             {this.props.ownerId === userId && (
-                                <p onClick={() => this.deleteSong(song.id)} style={{ cursor: 'pointer' }}>
+                                <p onClick={() => this.deleteSong(song.id)} className="cursor-pointer hover:text-red-500">
                                     Delete Song
                                 </p>
                             )}
 
-                            <p onClick={() => this.setState({ showPlaylists: !this.state.showPlaylists })} style={{ cursor: 'pointer' }}>
+                            <p onClick={() => this.setState({ showPlaylists: !this.state.showPlaylists })} className="cursor-pointer hover:text-blue-500">
                                 Add Song to Playlist
                             </p>
 
                             {this.state.showPlaylists && this.state.playlists.length > 0 && (
-                                <div className="playlist-list">
-                                    <h4>Select Playlist:</h4>
+                                <div className="playlist-list mt-2">
+                                    <h4 className="font-semibold">Select Playlist:</h4>
                                     {this.state.playlists.map(playlist => (
-                                        <p key={playlist.id} onClick={() => this.addToPlaylist(playlist)} style={{ cursor: 'pointer' }}>
+                                        <p key={playlist.id} onClick={() => this.addToPlaylist(playlist)} className="cursor-pointer hover:text-blue-500">
                                             {playlist.name}
                                         </p>
                                     ))}
@@ -238,8 +249,10 @@ class SongFeed extends React.Component
                             )}
                         </div>
                     )}
-            </div>
-        ));
+                </div>
+            ))}
+        </div>
+        );
     
     }
 
@@ -248,8 +261,8 @@ class SongFeed extends React.Component
     render()
     {
         return(
-            <div>
-                {this.display()}
+            <div className="p-4"> 
+                {this.display()}    
             </div>
         );
     }

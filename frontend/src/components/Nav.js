@@ -97,18 +97,23 @@ class Nav extends React.Component
         else
         {
             return(
-                <nav>
-                    <img src = {logo} alt = "Sound Sync Logo" title = "Sound Sync Logo"/>
+                <nav className="bg-cWhite p-4 flex items-center justify-between shadow-lg rounded-lg">
+                    <img src={logo} alt="Sound Sync Logo" title="Sound Sync Logo" className="h-12 mx-4" /> 
 
-                    <SearchComponent/>
+                    <SearchComponent />
+                    
 
-                    <ul>
-                        <li><Link to = '/Home'>Home</Link></li>
-                        <li><Link to = '/SongFeedPage/feed'>Song Feed</Link></li>
-                        <li><Link to = '/PlaylistFeedPage/feed'>playlist Feed</Link></li>
-                        <li><Link to = {`/ProfilePage/${this.state.userId}`}><img src = {user.profilePicture} alt = "Profile Picture" title = "Profile Picture"/></Link></li>
-                        <li><button onClick={this.handleLogout}>Logout</button></li>
-                    </ul>  
+                    <div className="flex space-x-12 items-center mx-4"> 
+                        <Link to='/Home' className="text-cBlack hover:text-cPink transition duration-200 font-semibold">Home</Link>
+                        <Link to='/SongFeedPage/feed' className="text-cBlack hover:text-cPink transition duration-200 font-semibold">Song Feed</Link>
+                        <Link to='/PlaylistFeedPage/feed' className="text-cBlack hover:text-cPink transition duration-200 font-semibold">Playlist Feed</Link>
+                    </div>
+
+                    <Link to={`/ProfilePage/${this.state.userId}`}>
+                        <img src={user.profilePicture} alt="Profile Picture" title="Profile Picture" className="h-12 w-12 rounded-full border-2  mx-4 transition-transform transform hover:scale-110" /> 
+                    </Link>
+
+                    <button onClick={this.handleLogout} className="text-cBlack hover:text-cPink transition duration-200 mx-4 font-semibold">Logout</button> 
                 </nav>
             );
         }

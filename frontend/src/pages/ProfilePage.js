@@ -24,26 +24,36 @@ const ProfilePage = () =>
     const {userId} = useParams();
     return(
         <div>
-            <Nav/>
+            <Nav />
 
-            <main>
-                <ProfileComponent userId={userId}/>
+            <main className="flex flex-col items-center bg-cBlue">
+                <ProfileComponent userId={userId} className="mb-4 " />
                 {/* <ProfileComponent onPlaylistCreated={refreshPlaylists}/> */}
 
-                <MyPlaylists userId={userId}/>
+                <MyPlaylists userId={userId} className="mb-4" />
+                <hr/>
+                <hr/>
+                <hr/>
                 {/* <MyPlaylists ref={myPlaylistsRef}/> */}
 
                 {/* <ProfilePreview/> */}
 
-                <ProfilePreviewFollowing userId={userId}/>
-    
-    
-                <ProfilePreviewFollowers userId={userId}/>
+                <div>
 
+                <ProfilePreviewFollowing userId={userId} className="mb-4" />
+                </div>
 
-                
+                <hr/>
+                <hr/>
+                <hr/>
+                <div>
 
-                <div></div>
+                <div>
+                <ProfilePreviewFollowers userId={userId} className="mb-4" />
+
+                </div>
+                </div>
+
             </main>
         </div>
     );

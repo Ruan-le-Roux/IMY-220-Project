@@ -1,0 +1,120 @@
+[{
+  "_id": {
+    "$oid": "6727e89b3dc3ae1ee1f4c206"
+  },
+  "id": 1,
+  "title": "Maybe it's Ok",
+  "artist": "We Are Messagers",
+  "embedUrl": "https://open.spotify.com/embed/track/3mKIS7svYfwxiwRWIi1tmK",
+  "timestamp": "03/11/2024",
+  "deleted": false,
+  "ownerId": 1
+},
+{
+  "_id": {
+    "$oid": "6727e9433dc3ae1ee1f4c208"
+  },
+  "id": 2,
+  "title": "Summertime Sadness",
+  "artist": "Lana Del Rey",
+  "embedUrl": "https://open.spotify.com/embed/track/3BJe4B8zGnqEdQPMvfVjuS",
+  "timestamp": "03/11/2024",
+  "deleted": false,
+  "ownerId": 1
+},
+{
+  "_id": {
+    "$oid": "6727e9573dc3ae1ee1f4c209"
+  },
+  "id": 3,
+  "title": "Hello",
+  "artist": "Adele",
+  "embedUrl": "https://open.spotify.com/embed/track/1Yk0cQdMLx5RzzFTYwmuld",
+  "timestamp": "03/11/2024",
+  "deleted": false,
+  "ownerId": 1
+},
+{
+  "_id": {
+    "$oid": "6727e9b73dc3ae1ee1f4c20a"
+  },
+  "id": 4,
+  "title": "MIDDLE CHILD",
+  "artist": "J. Cole",
+  "embedUrl": "https://open.spotify.com/embed/track/2JvzF1RMd7lE3KmFlsyZD8",
+  "timestamp": "03/11/2024",
+  "deleted": false,
+  "ownerId": 1
+},
+{
+  "_id": {
+    "$oid": "6727e9e93dc3ae1ee1f4c20b"
+  },
+  "id": 5,
+  "title": "Wholehearted",
+  "artist": "We Are Messengers",
+  "embedUrl": "https://open.spotify.com/embed/track/0hyP1FixDFPwp2BAmMntZd",
+  "timestamp": "03/11/2024",
+  "deleted": false,
+  "ownerId": 1
+},
+{
+  "_id": {
+    "$oid": "6727ea093dc3ae1ee1f4c20c"
+  },
+  "id": 6,
+  "title": "I am Brababbas",
+  "artist": "Josiah Queen",
+  "embedUrl": "https://open.spotify.com/embed/track/3fQQ8amTjVv5bEJFWmCEPV",
+  "timestamp": "03/11/2024",
+  "deleted": false,
+  "ownerId": 1
+},
+{
+  "_id": {
+    "$oid": "6727ea313dc3ae1ee1f4c20d"
+  },
+  "id": 7,
+  "title": "Neighbors",
+  "artist": "J. Cole",
+  "embedUrl": "https://open.spotify.com/embed/track/0utlOiJy2weVl9WTkcEWHy",
+  "timestamp": "03/11/2024",
+  "deleted": false,
+  "ownerId": 1
+},
+{
+  "_id": {
+    "$oid": "6727ea493dc3ae1ee1f4c20e"
+  },
+  "id": 8,
+  "title": "amari",
+  "artist": "J. Cole",
+  "embedUrl": "https://open.spotify.com/embed/track/2cnKST6T9qUo2i907lm8zX",
+  "timestamp": "03/11/2024",
+  "deleted": false,
+  "ownerId": 1
+},
+{
+  "_id": {
+    "$oid": "6727ea6d3dc3ae1ee1f4c20f"
+  },
+  "id": 9,
+  "title": "BUTTRTFLY EFFECT",
+  "artist": "Travis Scott",
+  "embedUrl": "https://open.spotify.com/embed/track/2cYqizR4lgvp4Qu6IQ3qGN",
+  "timestamp": "03/11/2024",
+  "deleted": false,
+  "ownerId": 1
+},
+{
+  "_id": {
+    "$oid": "6727ea833dc3ae1ee1f4c210"
+  },
+  "id": 10,
+  "title": "Set Fire to the Rain",
+  "artist": "Adele",
+  "embedUrl": "https://open.spotify.com/embed/track/3di5hcvxxciiqwMH1jarhY",
+  "timestamp": "03/11/2024",
+  "deleted": false,
+  "ownerId": 1
+}]

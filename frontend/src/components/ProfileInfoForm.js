@@ -105,45 +105,87 @@ class ProfileInfoForm extends React.Component
             return <Navigate to = '/Home'/>;            
         }
         return(
-            <div>
-                <form onSubmit = { this.submitForm }>
-                        {errorMessage && <div style = {{color: 'red'}}>{errorMessage}</div>}
+            <div className="max-w-md mx-auto p-6 bg-cWhite rounded-lg shadow-lg">
+                <form onSubmit={this.submitForm} className="flex flex-col space-y-4">
+                    {errorMessage && (
+                        <div className="text-red-500 mb-4">{errorMessage}</div>
+                    )}
 
+                    <label className="flex flex-col">
+                        <span className="text-cBlack">Profile Picture:</span>
+                        <input
+                            type="file"
+                            name="profilePic"
+                            onChange={this.handleImage}
+                            className="mt-1 border rounded-md p-2  focus:outline-none focus:ring focus:ring-cPink"
+                        />
+                    </label>
 
-                        <label>
-                            Profile Picture:
+                    <label className="flex flex-col">
+                        <span className="text-cBlack">Bio: <span className="text-red-500">*</span></span>
+                        <textarea
+                            rows="4"
+                            cols="50"
+                            name="bio"
+                            placeholder="Short bio about myself"
+                            onChange={this.handleChange}
+                            className="mt-1 border rounded-md p-2  focus:outline-none focus:ring focus:ring-cPink"
+                        ></textarea>
+                    </label>
 
-                            <input type = "file" name = 'profilePic' onChange={this.handleImage}/>
-                        </label>
-                    
-                        <label>
-                            Bio: <span>*</span>
-                            <textarea rows = "4"cols = "50" name = 'bio' placeholder = "Short bio about myself" onChange={this.handleChange}></textarea>
-                        </label>
+                    <p className="text-cBlack font-semibold">Other social accounts:</p>
 
-                        <p>Other social accounts:</p> 
+                    {/* Instagram */}
+                    <label className="flex items-center space-x-2">
+                        <img src={instagram} alt="Instagram logo" title="Instagram logo" className="h-6 w-6" />
+                        <input
+                            type="text"
+                            name="instagram"
+                            onChange={this.handleChange}
+                            placeholder="link to your Instagram account"
+                            className="border rounded-md p-2  focus:outline-none focus:ring focus:ring-cPink flex-1"
+                        />
+                    </label>
 
-                        <label>
-                            <img src = {instagram} alt = "Instagram logo" title = "Instagram logo"/>
-                            <input type = "text" name = 'instagram' onChange={this.handleChange} placeholder = "link to your Instagram account" />
-                        </label>
+                    {/* Facebook */}
+                    <label className="flex items-center space-x-2">
+                        <img src={facebook} alt="Facebook logo" title="Facebook logo" className="h-6 w-6" />
+                        <input
+                            type="text"
+                            name="facebook"
+                            onChange={this.handleChange}
+                            placeholder="link to your Facebook account"
+                            className="border rounded-md p-2  focus:outline-none focus:ring focus:ring-cPink flex-1"
+                        />
+                    </label>
 
-                        <label>
-                            <img src = {facebook} alt = "Facebook logo" title = "Facebook logo"/>
-                            <input type = "text" name = 'facebook' onChange={this.handleChange} placeholder = "link to your Facebook account" />
-                        </label>
+                    {/* TikTok */}
+                    <label className="flex items-center space-x-2">
+                        <img src={tiktok} alt="TikTok logo" title="TikTok logo" className="h-6 w-6" />
+                        <input
+                            type="text"
+                            name="tiktok"
+                            onChange={this.handleChange}
+                            placeholder="link to your TikTok account"
+                            className="border rounded-md p-2  focus:outline-none focus:ring focus:ring-cPink flex-1"
+                        />
+                    </label>
 
-                        <label>
-                            <img src = {tiktok} alt = "TikTok logo" title = "TikTok logo"/>
-                            <input type = "text" name = 'tiktok' onChange={this.handleChange} placeholder = "link to your TikTok account" />
-                        </label>
+                    {/* Twitter */}
+                    <label className="flex items-center space-x-2">
+                        <img src={twitter} alt="Twitter logo" title="Twitter logo" className="h-6 w-6" />
+                        <input
+                            type="text"
+                            name="twitter"
+                            onChange={this.handleChange}
+                            placeholder="link to your Twitter account"
+                            className="border rounded-md p-2  focus:outline-none focus:ring focus:ring-cPink flex-1"
+                        />
+                    </label>
 
-                        <label>
-                            <img src = {twitter} alt = "Twitter logo" title = "Twitter logo"/>
-                            <input type = "text" name = 'twitter' onChange={this.handleChange}  placeholder = "link to your Twitter account" />
-                        </label>
-
-                        <button type = "submit">Create account!</button>
+                    <button type="submit" className="mt-4 text-white bg-cBlue  py-2 rounded-md hover:bg-cPink transition duration-200">
+                        Create account!
+                    </button>
                 </form>
             </div>
         );

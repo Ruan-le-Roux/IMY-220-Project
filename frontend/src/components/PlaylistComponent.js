@@ -188,10 +188,26 @@ class PlaylistComponent extends React.Component
             if(res.ok)
             {
                 return(
-                    <div>
-                        <button onClick = {this.handleEdit}>Edit</button>
-                        <button onClick = {this.handleDelete}>Delete</button>
-                        <button onClick = {this.addSong}><FontAwesomeIcon icon={faPlus} />Add Song</button>
+                    <div className="flex space-x-3 mb-6">
+                        <button 
+                            onClick={this.handleEdit} 
+                            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition duration-200"
+                        >
+                            Edit
+                        </button>
+                        <button 
+                            onClick={this.handleDelete} 
+                            className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition duration-200"
+                        >
+                            Delete
+                        </button>
+                        <button 
+                            onClick={this.addSong} 
+                            className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition duration-200 flex items-center space-x-2"
+                        >
+                            <FontAwesomeIcon icon={faPlus} />
+                            <span>Add Song</span>
+                        </button>
                     </div>
         
                 );
@@ -213,63 +229,82 @@ class PlaylistComponent extends React.Component
 
         return(
 
-            <main>
-                <img src = {playlist.coverImage} alt = 'Album cover' title = 'Album cover'/>
+            <main className="p-6 bg-gray-100 min-h-screen">
+    <div className="max-w-5xl mx-auto bg-white rounded-lg shadow-md p-6">
+        <img 
+            src={playlist.coverImage} 
+            alt="Album cover" 
+            title="Album cover" 
+            className="w-full h-64 object-cover rounded-md mb-4"
+        />
 
-                <h1>{playlist.name}</h1>
+        <h1 className="text-3xl font-bold mb-2">{playlist.name}</h1>
+        <h2 className="text-lg font-medium text-gray-700 mb-4">{owner}</h2>
 
-                <h2>{owner}</h2>
-                
-                {/* <p>{playlist.songId.length} Songs</p> */}
-                <p>{playlist.songId ? `${playlist.songId.length} Songs` : '0 Songs'}</p>
+        <p className="text-gray-600 mb-2">{playlist.songId ? `${playlist.songId.length} Songs` : '0 Songs'}</p>
+        <p className="text-gray-600 mb-2">{playlist.category}</p>
+        <p className="text-gray-500 mb-4">{playlist.hashTags}</p>
+        <p className="text-gray-700 mb-6">{playlist.description}</p>
 
+        {isOwner && (
+            <div className="flex space-x-3 mb-6">
+                <button 
+                    onClick={this.handleEdit} 
+                    className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                >
+                    Edit
+                </button>
+                <button 
+                    onClick={this.handleDelete} 
+                    className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+                >
+                    Delete
+                </button>
+                <button 
+                    onClick={this.addSong} 
+                    className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 flex items-center space-x-2"
+                >
+                    <FontAwesomeIcon icon={faPlus} />
+                    <span>Add Song</span>
+                </button>
+            </div>
+        )}
 
-                <p>{playlist.category}</p>
+        <hr className="border-t-2 border-gray-200 mb-6"/>
 
-                <p>{playlist.hashTags}</p>
+        <div className="mb-6">
+            <div className="grid grid-cols-4 font-semibold text-gray-800 mb-2">
+                <h1 className="col-span-1">#</h1>
+                <h1 className="col-span-1">Name</h1>
+                <h1 className="col-span-1">Date added</h1>
+                <h1 className="col-span-1">Link</h1>
+            </div>
 
-                <p>{playlist.description}</p>
+            <div>
+                <DisplaySongs 
+                    id={this.state.id} 
+                    isOwner={this.state.isOwner} 
+                    onDeleteSong={(songId) => this.deleteSong(songId)} 
+                />
+            </div>
+        </div>
 
-                {isOwner && (
-                    <div>
-                        <button onClick={this.handleEdit}>Edit</button>
-                        <button onClick={this.handleDelete}>Delete</button>
-                        <button onClick={this.addSong}>
-                        <FontAwesomeIcon icon={faPlus} /> Add Song
-                        </button>
-                    </div>
-                )}
+        <div>
+            <h1 className="text-2xl font-semibold mb-4">Comments</h1>
+            <span 
+                onClick={this.handleAddComment} 
+                className="cursor-pointer text-blue-500 flex items-center mb-4"
+            >
+                <FontAwesomeIcon icon={faPlus} className="mr-2"/>
+                Add Comment
+            </span>
 
-                <hr/>
-
-                <div>
-                    <div>
-                        <h1>#</h1>
-
-                        <h1>Name</h1>
-
-                        <h1>Date added</h1>
-
-                        <h1>Link</h1>
-                    </div>
-
-                    <div>
-                        <DisplaySongs id={this.state.id} isOwner={this.state.isOwner} onDeleteSong={(songId) => this.deleteSong(songId)}/>
-                    </div>
-                </div>
-
-                <div>
-                    <h1>Comments</h1>
-
-                    <span onClick = {this.handleAddComment}><FontAwesomeIcon icon={faPlus} /></span>
-
-                    
-
-                    <div>
-                        <CommentList id={this.state.id}/>
-                    </div>
-                </div>
-            </main>
+            <div>
+                <CommentList id={this.state.id} />
+            </div>
+        </div>
+    </div>
+</main>
         );
     }
 
@@ -334,25 +369,26 @@ class PlaylistComponent extends React.Component
 
 
         return(
-            <div>
-                
-                <main>
+            <div className="p-4 bg-gray-100 min-h-screen">
+    <main className="max-w-5xl mx-auto bg-white p-6 rounded-lg shadow-md">
+        {this.displayPlaylist()}
+        
+        {/* Uncomment and style the comments section as needed */}
+        {/* 
+        <div className="mt-8">
+            <h1 className="text-2xl font-semibold mb-4">Comments</h1>
+            <span onClick={this.handleAddComment} className="cursor-pointer text-blue-500">
+                <FontAwesomeIcon icon={faPlus} />
+            </span>
 
-                    {this.displayPlaylist()}
-{/*                     
-                    <div>
-                        <h1>Comments</h1>
-
-                        <span onClick = {this.handleAddComment}><FontAwesomeIcon icon={faPlus} /></span>
-
-                        
-
-                        <div>
-                            <CommentList/>
-                        </div>
-                    </div> */}
-                </main>
+            <div className="mt-4">
+                <CommentList />
             </div>
+        </div> 
+        */}
+    </main>
+</div>
+
         );
     }
 }

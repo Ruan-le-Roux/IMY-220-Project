@@ -50,19 +50,29 @@ class Songs extends React.Component
     {
         if(this.state.songs.length === 0)
         {
-            return <p>No songs found</p>
+            return <p className="text-red-500">No songs found</p>;
         }
 
         const limitedSongs = this.state.songs.slice(0, 5);
 
         return limitedSongs.map((song) => (
-            <section key={song.id}>
-                <iframe src={song.embedUrl} width="300" height="380" frameBorder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+            
 
-                <div>
-                    <h4>{song.title}</h4>
-                    <p>{song.artist}</p>
-                </div>
+            <section key={song.id} className="border border-cPink rounded-lg p-4 mb-4 bg-cDarkGray hover:shadow-lg transition-shadow duration-200">
+            <iframe 
+                src={song.embedUrl} 
+                width="300" 
+                height="380" 
+                frameBorder="0" 
+                allowtransparency="true" 
+                allow="encrypted-media"
+                className="rounded-md"
+            ></iframe>
+
+            <div className="mt-2">
+                <h4 className="text-lg font-semibold text-cWhite">{song.title}</h4>
+                <p className="text-cGray">{song.artist}</p>
+            </div>
             </section>
         ));
     }
@@ -77,15 +87,23 @@ class Songs extends React.Component
             return <Navigate to = {`/SongFeedPage/${type}`}/>
         }
         return(
-            <div>
-                <h1>My Songs</h1>
+            <div className="bg-cBlue p-6 rounded-md text-cWhite shadow-md">
+                <h1 className="text-2xl font-bold mb-4">My Songs</h1>
+                {this.state.songs.length !== 0 && (
+                    <button 
+                        onClick={this.handleSeeAll} 
+                        className="bg-cPink text-white px-4 py-2 rounded-md transition duration-200 hover:bg-cPink-dark"
+                    >
+                        See All
+                    </button>
+                )}
+                
 
-                <button onClick = {this.handleSeeAll}>See All</button>
-
-                <div>
+                <div className="mt-4">
                     {this.renderSongs()}                    
                 </div>
             </div>
+
         );
     }
 }

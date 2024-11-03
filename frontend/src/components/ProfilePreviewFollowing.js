@@ -79,10 +79,15 @@ class ProfilePreviewFollowing extends React.Component
         const limited = this.state.users.slice(0, 3);
 
         return limited.map((user) => (
-            <section key={user.id}>
-                <img src={user.profilePicture} alt={`${user.name}'s profile`} title={`${user.name}'s profile`} />
-                <h3>{user.name} {user.surname}</h3>
-            </section>
+            <section key={user.id} className="flex items-center space-x-4 p-4 bg-gray-100 rounded-lg shadow-md mb-4">
+            <img 
+                src={user.profilePicture} 
+                alt={`${user.name}'s profile`} 
+                title={`${user.name}'s profile`} 
+                className="w-12 h-12 rounded-full object-cover"
+            />
+            <h3 className="text-lg font-semibold">{user.name} {user.surname}</h3>
+        </section>
         )); 
     }
 
@@ -97,16 +102,23 @@ class ProfilePreviewFollowing extends React.Component
         }
 
         return(
-            <div>
-                <section>
-                    <h2>Following</h2>
-                    <button onClick={this.handleFollowing}>See all</button>
+            <div className="p-6 bg-white rounded-lg shadow-lg">
+            <section className="mb-6">
+                <div className="flex justify-between items-center">
+                    <h2 className="text-2xl font-bold">Following</h2>
+                    <button 
+                        onClick={this.handleFollowing} 
+                        className="text-cBlack font-medium hover:underline bg-cPink p-4 rounded"
+                    >
+                        See all
+                    </button>
+                </div>
 
-                    <div>
-                        {this.displayFollowing()} 
-                    </div>
-                </section>
-            </div>
+                <div className="mt-4 space-y-4">
+                    {this.displayFollowing()}
+                </div>
+            </section>
+        </div>
         );
     }
 }

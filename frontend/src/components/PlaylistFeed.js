@@ -76,65 +76,69 @@ class PlaylistFeed extends React.Component
         }
     }
 
-    displayPlaylists()
-    {
+    displayPlaylists() {
         const { type } = this.state;
-
-        if(type === 'a')
-        {
+    
+        if (type === 'a') {
             return (
                 <div>
-                    <h1>Activity Playlist Feed</h1>
+                    <h1 className="text-2xl font-bold mb-4">Activity Playlist Feed</h1>
     
-                    {this.state.playlists.map((playlist) => (
-                        <section key={playlist.id} >
-                            <Link to={`/PlaylistPage/${playlist.id}`}>
-                                <img src = {playlist.coverImage} alt = "Picture of Playlist" title = "Picture of Playlist"/>
-                                
-                                <div>
-                                    <h4>{playlist.name}</h4>
-        
-                                    <p>{playlist.owner}</p>
-                                </div>
-                            </Link>
-                        </section>
-                    ))}
+                    <div className="grid grid-cols-4 gap-4">
+                        {this.state.playlists.map((playlist) => (
+                            <section key={playlist.id} className="bg-gray-100 rounded-lg p-4 text-center shadow">
+                                <Link to={`/PlaylistPage/${playlist.id}`}>
+                                    <img 
+                                        src={playlist.coverImage} 
+                                        alt="Picture of Playlist" 
+                                        title="Picture of Playlist" 
+                                        className="w-full h-40 object-cover rounded-md mb-2" 
+                                    />
+                                    <div>
+                                        <h4 className="text-lg font-semibold">{playlist.name}</h4>
+                                        <p className="text-gray-600">{playlist.owner}</p>
+                                    </div>
+                                </Link>
+                            </section>
+                        ))}
+                    </div>
                 </div>
             );
-        }
-        else
-        {
+        } else {
             console.log(`All playlists: ${this.state.playlists}`);
             return (
                 <div>
-                    <h1>Playlist Feed</h1>
+                    <h1 className="text-2xl font-bold mb-4">Playlist Feed</h1>
     
-                    {this.state.playlists.map((playlist) => (
-                        <section key={playlist.id} >
-                            <Link to={`/PlaylistPage/${playlist.id}`}>
-                                <img src = {playlist.coverImage} alt = "Picture of Playlist" title = "Picture of Playlist"/>
-                                
-                                <div>
-                                    <h4>{playlist.name}</h4>
-        
-                                    <p>{playlist.owner}</p>
-                                </div>
-                            </Link>
-                        </section>
-                    ))}
+                    <div className="grid grid-cols-4 gap-4">
+                        {this.state.playlists.map((playlist) => (
+                            <section key={playlist.id} className="bg-cWhite rounded-lg p-4 text-center shadow">
+                                <Link to={`/PlaylistPage/${playlist.id}`}>
+                                    <img 
+                                        src={playlist.coverImage} 
+                                        alt="Picture of Playlist" 
+                                        title="Picture of Playlist" 
+                                        className="w-full h-40 object-cover rounded-md mb-2" 
+                                    />
+                                    <div>
+                                        <h4 className="text-lg font-semibold">{playlist.name}</h4>
+                                        <p className="text-gray-600">{playlist.owner}</p>
+                                    </div>
+                                </Link>
+                            </section>
+                        ))}
+                    </div>
                 </div>
             );
         }
-
-
     }
+    
+    render() {
+        return (
+            <div className="p-4">
+                {this.displayPlaylists()}
 
-
-
-    render()
-    {
-        return(
-            this.displayPlaylists()
+            </div>
         );
     }
 }

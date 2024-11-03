@@ -9,10 +9,12 @@ const PlaylistFeedPage = () =>
     const { type } = useParams();
 
     return(
-        <div>
-            <Nav/>
-
-            <PlaylistFeed type={type}/>
+        <div className="flex flex-col min-h-screen">
+            <Nav />
+            
+            <main className="flex-grow bg-cBlue">
+                <PlaylistFeed type={type} />
+            </main>
         </div>
     );
 }

@@ -1707,7 +1707,7 @@ app.put("/api/playlists/add-song/:id/:userId", /*#__PURE__*/function () {
       while (1) switch (_context17.prev = _context17.next) {
         case 0:
           _req$params2 = req.params, id = _req$params2.id, userId = _req$params2.userId;
-          songId = req.body.songId; // Assuming songId is an array
+          songId = req.body.songId;
           _context17.prev = 2;
           _context17.next = 5;
           return existingPlaylist(id);
@@ -1741,7 +1741,7 @@ app.put("/api/playlists/add-song/:id/:userId", /*#__PURE__*/function () {
           }));
         case 15:
           songExistsResults = _context17.sent;
-          allSongsExist = songExistsResults.every(Boolean); // Check if all results are true
+          allSongsExist = songExistsResults.every(Boolean);
           if (allSongsExist) {
             _context17.next = 19;
             break;
@@ -1757,7 +1757,7 @@ app.put("/api/playlists/add-song/:id/:userId", /*#__PURE__*/function () {
           }));
         case 21:
           existingSongs = _context17.sent;
-          anySongExistsInPlaylist = existingSongs.some(Boolean); // Check if any song is already in the playlist
+          anySongExistsInPlaylist = existingSongs.some(Boolean);
           if (!anySongExistsInPlaylist) {
             _context17.next = 25;
             break;
@@ -1767,7 +1767,6 @@ app.put("/api/playlists/add-song/:id/:userId", /*#__PURE__*/function () {
             message: "One or more songs are already in the playlist"
           }));
         case 25:
-          // Proceed to add songs to the playlist
           _iterator = _createForOfIteratorHelper(songId);
           _context17.prev = 26;
           _iterator.s();

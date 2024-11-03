@@ -55,7 +55,7 @@ class DisplaySongs extends React.Component {
     async fetchPlaylists() {
         try {
             const userId = localStorage.getItem('userId');
-            const res = await fetch(`/api/playlists/${this.state.id}`);
+            const res = await fetch(`/api/playlists/my-playlists/${this.state.userId}`);
             const data = await res.json();
             console.log("My playlists: ", data.data);
 
@@ -113,6 +113,7 @@ class DisplaySongs extends React.Component {
             const message = await res.json();
 
             if (res.ok) {
+                
                 this.setState({ showContextMenu: false });
             } else {
                 window.alert(`Could not add song to playlist`);
@@ -161,36 +162,59 @@ class DisplaySongs extends React.Component {
 
         return songs.map((song, i) => {
             return (
-                <div key={song.id}>
-                    <p>{i + 1}</p>
-                    <h2>{song.title}</h2>
-                    <p>{song.artist}</p>
-                    <p>{song.timestamp}</p>
-                    <iframe src={song.embedUrl} width="300" height="380" frameBorder="0" allowtransparency="true" allow="encrypted-media"></iframe>
-                    <FontAwesomeIcon icon={faEllipsis} onClick={(e) => this.toggleContextMenu(e, song)} />
+                <div key={song.id} className="flex items-center bg-white rounded-lg shadow-md p-4 mb-4 relative">
+                    <p className="text-gray-600 mr-4 w-12">{i + 1}</p> {/* Number */}
+                    <h2 className="text-xl font-semibold text-gray-800 mr-4 flex-1">{song.title}</h2> {/* Name */}
+                    <p className="text-gray-500 text-sm mr-4">{song.timestamp}</p> {/* Date */}
+                    <iframe 
+                        src={song.embedUrl} 
+                        width="120" 
+                        height="150" 
+                        frameBorder="0" 
+                        allowtransparency="true" 
+                        allow="encrypted-media"
+                        className=" rounded-lg" 
+                    ></iframe> {/* Link (embedded media) */}
+                    
+                    <FontAwesomeIcon 
+                        icon={faEllipsis} 
+                        onClick={(e) => this.toggleContextMenu(e, song)} 
+                        className="text-gray-600 cursor-pointer"
+                    />
 
                     {this.state.showContextMenu && this.state.selectedSong === song && (
                         <div
-                            className="context-menu"
+                            className="absolute bg-white border border-gray-300 rounded shadow-md p-2 z-10"
                             ref={(node) => { this.contextMenuRef = node; }}
-                            style={{ position: 'absolute', background: 'white', border: '1px solid #ccc', padding: '10px' }}>
-                            <h4>Select Playlist:</h4>
+                            style={{ top: '40px', left: '10px' }} 
+                        >
+                            <h4 className="text-gray-700 font-semibold mb-2">Select Playlist:</h4>
                             
-                            {parseInt(this.state.playlists.userId) === parseInt(this.state.userId) && 
-                                <p onClick={this.handleDeleteSong} style={{ cursor: 'pointer' }}>
+                            {this.state.playlists.length > 0 && this.state.playlists.some(playlist => parseInt(playlist.userId) === parseInt(this.state.userId)) && 
+                                <p 
+                                    onClick={this.handleDeleteSong} 
+                                    className="text-red-600 cursor-pointer hover:underline mb-1"
+                                >
                                     Delete Song
                                 </p>
-                            
                             }
-                            <p onClick={() => this.setState({ showPlaylists: !this.state.showPlaylists })} style={{ cursor: 'pointer' }}>
+                            
+                            <p 
+                                onClick={() => this.setState({ showPlaylists: !this.state.showPlaylists })} 
+                                className="text-blue-600 cursor-pointer hover:underline mb-1"
+                            >
                                 Add Song to Playlist
                             </p>
 
                             {this.state.showPlaylists && this.state.playlists.length > 0 && (
-                                <div className="playlist-list">
-                                    <h4>Select Playlist:</h4>
+                                <div className="playlist-list mt-2">
+                                    <h4 className="text-gray-700 font-semibold mb-1">Select Playlist:</h4>
                                     {this.state.playlists.map(playlist => (
-                                        <p key={playlist.id} onClick={() => this.addToPlaylist(playlist)} style={{ cursor: 'pointer' }}>
+                                        <p 
+                                            key={playlist.id} 
+                                            onClick={() => this.addToPlaylist(playlist)} 
+                                            className="cursor-pointer hover:underline text-gray-800 mb-1"
+                                        >
                                             {playlist.name}
                                         </p>
                                     ))}

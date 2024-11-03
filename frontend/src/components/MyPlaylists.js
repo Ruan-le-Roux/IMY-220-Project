@@ -79,37 +79,46 @@ class MyPlaylists extends React.Component
         if(this.state.error === true)
         {
             return(
-                <div>
-                    <h1>My Playlists</h1>
-                    
-                    <p>{this.state.errorMessage}</p>
+                <div className="bg-cBlue p-6 rounded-md shadow-md text-cWhite">
+                    <h1 className="text-2xl font-bold">My Playlists</h1>
+                    <p className="text-red-500">{this.state.errorMessage}</p>
                 </div>
             );
         }
         
         return(
-            <div>
-                <h1>My Playlists</h1>
+            <div className="bg-cBlue p-6 rounded-md shadow-md text-cWhite">
+            <h1 className="text-2xl font-bold">My Playlists</h1>
 
-                <button onClick = {this.handleSeeAll}>See All</button>
+            <button 
+                onClick={this.handleSeeAll} 
+                className="bg-cPink text-white px-4 py-2 rounded-md mb-4 transition duration-200 hover:bg-cPink-dark"
+            >
+                See All
+            </button>
 
-                <div>
-                    {this.state.playlists.length > 0 ? (
-                        this.state.playlists.map((playlist) => (
-                            <section key={playlist.id}>
-                                <Link to={`/playlistPage/${playlist.id}`}>
-                                    <img src={playlist.coverImage} alt={`Cover of ${playlist.name}`} title="Picture of Playlist" />
-                                    
-                                    <div>
-                                        <h4>{playlist.name}</h4>
-                                        <p>me</p>
-                                    </div>                                
-                                </Link>
-                            </section>
-                        ))
-                    ) : (
-                        <p>No playlists available.</p>  
-                    )}
+            <div className="grid grid-cols-1 gap-4">
+                {this.state.playlists.length > 0 ? (
+                    this.state.playlists.map((playlist) => (
+                        <section key={playlist.id} className="border border-cPink rounded-lg p-4 hover:shadow-lg transition-shadow duration-200">
+                            <Link to={`/playlistPage/${playlist.id}`}>
+                                <img 
+                                    src={playlist.coverImage} 
+                                    alt={`Cover of ${playlist.name}`} 
+                                    title={`Picture of ${playlist.name}`} 
+                                    className="h-20 w-20 rounded-md mr-4 object-cover" 
+                                />
+                                
+                                <div>
+                                    <h4 className="text-lg font-semibold">{playlist.name}</h4>
+                                    <p className="text-cGray">me</p>
+                                </div>                                
+                            </Link>
+                        </section>
+                    ))
+                ) : (
+                    <p>No playlists available.</p>  
+                )}
                 </div>
             </div>
         );

@@ -1,0 +1,133 @@
+[{
+  "_id": {
+    "$oid": "6727e9123dc3ae1ee1f4c207"
+  },
+  "id": 1,
+  "userId": 1,
+  "name": "My Playlist",
+  "category": "Worship",
+  "description": "This is a Worship playlist",
+  "coverImage": "http://localhost:3000/assets/images/1730668818556-936180458.jpeg",
+  "hashTags": "\"#worship\"",
+  "songId": [
+    1,
+    5
+  ],
+  "comments": [
+    {
+      "id": 1,
+      "userId": 2,
+      "text": "This is a comment\r\n",
+      "image": "no",
+      "timestamp": {
+        "$date": "2024-11-03T21:38:25.675Z"
+      }
+    },
+    {
+      "id": 2,
+      "userId": 3,
+      "text": "",
+      "image": "http://localhost:3000/assets/images/1730669962500-888880727.png",
+      "timestamp": {
+        "$date": "2024-11-03T21:39:22.581Z"
+      }
+    }
+  ],
+  "createdAt": "03/11/2024",
+  "updatedAt": "03/11/2024"
+},
+{
+  "_id": {
+    "$oid": "6727ead63dc3ae1ee1f4c211"
+  },
+  "id": 2,
+  "userId": 1,
+  "name": "Chill",
+  "category": "Chill",
+  "description": "This is a Chill playlist",
+  "coverImage": "http://localhost:3000/assets/images/1730669270631-957484827.jpeg",
+  "hashTags": "\"#Chill\\n\"",
+  "songId": [
+    7,
+    8,
+    9,
+    4
+  ],
+  "comments": [],
+  "createdAt": "03/11/2024",
+  "updatedAt": "03/11/2024"
+},
+{
+  "_id": {
+    "$oid": "6727eb1d3dc3ae1ee1f4c213"
+  },
+  "id": 3,
+  "userId": 2,
+  "name": "Adele",
+  "category": "Pop",
+  "description": "This is an Adele playlist",
+  "coverImage": "http://localhost:3000/assets/images/album-cover.png",
+  "hashTags": "\"#Adele\"",
+  "songId": [
+    3,
+    10
+  ],
+  "comments": [],
+  "createdAt": "03/11/2024",
+  "updatedAt": "03/11/2024"
+},
+{
+  "_id": {
+    "$oid": "6727eb9a3dc3ae1ee1f4c215"
+  },
+  "id": 4,
+  "userId": 3,
+  "name": "Pop",
+  "category": "Pop",
+  "description": "",
+  "coverImage": "http://localhost:3000/assets/images/album-cover.png",
+  "hashTags": "\"\"",
+  "songId": [
+    2,
+    3
+  ],
+  "comments": [],
+  "createdAt": "03/11/2024",
+  "updatedAt": "03/11/2024"
+},
+{
+  "_id": {
+    "$oid": "6727ebd83dc3ae1ee1f4c217"
+  },
+  "id": 5,
+  "userId": 4,
+  "name": "Rap",
+  "category": "Rap",
+  "description": "",
+  "coverImage": "http://localhost:3000/assets/images/album-cover.png",
+  "hashTags": "\"\"",
+  "songId": [
+    4,
+    7,
+    8
+  ],
+  "comments": [],
+  "createdAt": "03/11/2024",
+  "updatedAt": "03/11/2024"
+},
+{
+  "_id": {
+    "$oid": "6727ec603dc3ae1ee1f4c218"
+  },
+  "id": 6,
+  "userId": 1,
+  "name": "playlist 6",
+  "category": "chill",
+  "description": "",
+  "coverImage": "http://localhost:3000/assets/images/album-cover.png",
+  "hashTags": "\"\"",
+  "songId": [],
+  "comments": [],
+  "createdAt": "03/11/2024",
+  "updatedAt": "03/11/2024"
+}]

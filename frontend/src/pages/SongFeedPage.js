@@ -8,10 +8,10 @@ const SongFeedPage = () =>
 {
     const {type} = useParams();
     return(
-        <div>
-            <Nav/>
-    
-            <SongFeed type={type}/>
+        <div className="bg-cBlue min-h-lvh">
+            <Nav />
+            
+            <SongFeed type={type} />
         </div>
     );
 }

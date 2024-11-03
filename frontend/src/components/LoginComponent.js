@@ -71,24 +71,41 @@ class LoginComponent extends React.Component
         }
 
         return(
-            <div>
-                <form onSubmit = {this.submitForm}>
-                    {errorMessage && <div style = {{color: 'red'}}>{errorMessage}</div>}
+            <div className="bg-cWhite p-6 rounded-lg max-w-md mx-auto">
+                <form onSubmit={this.submitForm} className="flex flex-col space-y-4">
+                    {errorMessage && <div className="text-red-500">{errorMessage}</div>}
 
-                    <label>
-                        Email: <span>*</span>
-                        <input type = "email" name = 'email' placeholder = "example@emai.com" required onChange = {this.handleChange}/>
+                    <label className="flex flex-col">
+                        <span className="text-cBlack">Email: <span className="text-red-500">*</span></span>
+                        <input
+                            type="email"
+                            name='email'
+                            placeholder="example@email.com"
+                            required
+                            onChange={this.handleChange}
+                            className="p-2 border rounded-lg shadow-md focus:outline-none focus:ring focus:ring-cPink"
+                        />
                     </label>
 
-                    <label>
-                        Password: <span>*</span>
-                        <input type = "password" name = 'password' placeholder = "Password1010!" required onChange = {this.handleChange}/>
+                    <label className="flex flex-col">
+                        <span className="text-cBlack">Password: <span className="text-red-500">*</span></span>
+                        <input
+                            type="password"
+                            name='password'
+                            placeholder="Password1010!"
+                            required
+                            onChange={this.handleChange}
+                            className="p-2 border rounded-lg shadow-lg focus:outline-none focus:ring focus:ring-cPink"
+                        />
                     </label>
-                    <button type = "submit">Login</button>
+
+                    <button
+                        type="submit"
+                        className="bg-cBlue text-white p-2 rounded hover:bg-cPink transition duration-200"
+                    >
+                        Login
+                    </button>
                 </form>
-
-
-                <p><small>Don't have an account? <Link to = '/RegisterPage'>Register here</Link></small></p>
             </div>
 
         );

@@ -4,7 +4,7 @@
   "description": "",
   "main": "frontend/src/server.js",
   "scripts": {
-    "build": "babel backend/server.js -d backend/dist",
+    "build": "npx webpack &&babel backend/server.js -d backend/dist",
     "start": "npm run build && node backend/dist/server.js",
     "dev": "nodemon backend/server.js",
     "server": "npm backend/server.js",
@@ -17,14 +17,17 @@
     "@fortawesome/free-regular-svg-icons": "^6.6.0",
     "@fortawesome/free-solid-svg-icons": "^6.6.0",
     "@fortawesome/react-fontawesome": "^0.2.2",
+    "css-loader": "^7.1.2",
     "dotenv": "^16.4.5",
     "express": "^4.20.0",
     "mongodb": "^6.9.0",
     "multer": "^1.4.5-lts.1",
     "path": "^0.12.7",
+    "postcss-loader": "^8.1.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-router-dom": "^6.26.2"
+    "react-router-dom": "^6.26.2",
+    "style-loader": "^4.0.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.25.6",

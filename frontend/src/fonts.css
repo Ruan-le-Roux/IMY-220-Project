@@ -1,0 +1,9 @@
+@font-face {
+    font-family: 'MyFont';
+    src: url('./assets/fonts/Maitree-Regular.ttf') format('ttf'),
+
+}
+@font-face {
+    font-family: 'MyFont2';
+    src: url('./assets/fonts/Poppins-Regular.ttf') format('ttf'),
+}

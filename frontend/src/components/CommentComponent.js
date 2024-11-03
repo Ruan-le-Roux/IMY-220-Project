@@ -15,8 +15,12 @@ class CommentComponent extends React.Component
             error: false,
             errorMessage: '',
             finalComments: [],
+            seeAll: false
 
         };
+
+        // this.handleAll = this.handleAll.bind(this);
+        this.handleSee = this.handleSee.bind(this);
     }
 
     async componentDidMount()
@@ -133,24 +137,31 @@ class CommentComponent extends React.Component
         }
         else
         {
-            const limitedComments = finalComments.slice(0, 20);
+            const limitedComments = finalComments.slice(0, 3);
             return limitedComments.map((comment) => (
-                <div key={comment.comment.id}>
-                    <p>{comment.comment.text}</p>
-                    
+                <div key={comment.comment.id} className="bg-white rounded-lg shadow-md p-4 mb-4">
+                    <p className="text-gray-800 mb-2">{comment.comment.text}</p>
+
                     {comment.comment.image !== "no" && (
                         <img
                             src={comment.comment.image}
                             alt="picture someone commented"
                             title="picture someone commented"
+                            className="mb-2 rounded-md shadow-sm"
                         />
                     )}
 
-                    <section>
-                        <Link to={`/ProfilePage/${comment.comment.userId}`}>
-                            <img src={comment.profilePic} alt="users profile picture" title="users profile picture"/>
-
-                            <p>{comment.name} {comment.surname}</p>                        
+                    <section className="flex items-center mt-2">
+                        <Link to={`/ProfilePage/${comment.comment.userId}`} className="flex items-center space-x-2">
+                            <img 
+                                src={comment.profilePic} 
+                                alt="user's profile picture" 
+                                title="user's profile picture" 
+                                className="w-10 h-10 rounded-full border-2 border-gray-300"
+                            />
+                            <p className="text-gray-700 font-medium">
+                                {comment.name} {comment.surname}
+                            </p>                        
                         </Link>
                     </section>
                 </div>
@@ -158,10 +169,146 @@ class CommentComponent extends React.Component
         }
     }
 
+    // handleAll()
+    // {
+    //     const {error, errorMessage, finalComments} = this.state;
+        
+    //     if(error === true)
+    //     {
+    //         return <h1>No comments on this playlist yet!</h1>
+    //     }
+    //     else
+    //     {
+    //         // const limitedComments = finalComments.slice(0, 20);
+    //         return finalComments.map((comment) => (
+    //             <div key={comment.comment.id} className="bg-white rounded-lg shadow-md p-4 mb-4">
+    //                 <p className="text-gray-800 mb-2">{comment.comment.text}</p>
+
+    //                 {comment.comment.image !== "no" && (
+    //                     <img
+    //                         src={comment.comment.image}
+    //                         alt="picture someone commented"
+    //                         title="picture someone commented"
+    //                         className="mb-2 rounded-md shadow-sm"
+    //                     />
+    //                 )}
+
+    //                 <section className="flex items-center mt-2">
+    //                     <Link to={`/ProfilePage/${comment.comment.userId}`} className="flex items-center space-x-2">
+    //                         <img 
+    //                             src={comment.profilePic} 
+    //                             alt="user's profile picture" 
+    //                             title="user's profile picture" 
+    //                             className="w-10 h-10 rounded-full border-2 border-gray-300"
+    //                         />
+    //                         <p className="text-gray-700 font-medium">
+    //                             {comment.name} {comment.surname}
+    //                         </p>                        
+    //                     </Link>
+    //                 </section>
+    //             </div>
+    //         ));
+    //     }
+
+    // }
+
+    handleSee()
+    {
+        this.setState(prevState => ({ seeAll: !prevState.seeAll }));
+    }
+
+    deleteComment(commentId)
+    {
+        this.delete(commentId);
+    }
+    async delete(commentId)
+    {
+        try
+        {
+            const userId = localStorage.getItem('userId');
+            console.log(`commetn: ${commentId}, user: ${userId} playlist: ${this.state.id2}`);
+            const res = await fetch(`/api/playlists/delete-comment/${parseInt(this.state.id2)}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    "commentId": parseInt(commentId),
+                    "userId": parseInt(userId)
+                })
+            });
+            const data = await res.json();
+
+            if(res.ok)
+            {
+                window.alert("Comment deleted");
+            }
+            else
+            {
+                window.alert("Comment not deleted");
+                console.error(data.message);
+            }
+        }
+        catch(error)
+        {
+            console.error("Error while deling comment: ", error);
+            window.alert("Comment not deleted");
+        }
+    }
+
     render()
     {
+        if(this.state.seeAll === true)
+        {
+            const {error, errorMessage, finalComments} = this.state;
+        
+        if(error === true)
+        {
+            return <h1>No comments on this playlist yet!</h1>
+        }
+        else
+        {
+            // const limitedComments = finalComments.slice(0, 20);
+            return finalComments.map((comment) => (
+                <div key={comment.comment.id} className="bg-white rounded-lg shadow-md p-4 mb-4">
+                    <button onClick={() => this.deleteComment(comment.comment.id)}>Delete comment</button>
+                    <p className="text-gray-800 mb-2">{comment.comment.text}</p>
+
+                    {comment.comment.image !== "no" && (
+                        <img
+                            src={comment.comment.image}
+                            alt="picture someone commented"
+                            title="picture someone commented"
+                            className="mb-2 rounded-md shadow-sm"
+                        />
+                    )}
+
+                    <section className="flex items-center mt-2">
+                        <Link to={`/ProfilePage/${comment.comment.userId}`} className="flex items-center space-x-2">
+                            <img 
+                                src={comment.profilePic} 
+                                alt="user's profile picture" 
+                                title="user's profile picture" 
+                                className="w-10 h-10 rounded-full border-2 border-gray-300"
+                            />
+                            <p className="text-gray-700 font-medium">
+                                {comment.name} {comment.surname}
+                            </p>                        
+                        </Link>
+                    </section>
+                </div>
+            ));
+        }
+
+        }
         return(
             <div>
+                <button 
+                        onClick={this.handleSee} 
+                        className="text-cBlack font-medium hover:underline bg-cPink p-4 rounded"
+                >
+                    See all
+                </button>
                 {this.displayComments()}
             </div>
         );

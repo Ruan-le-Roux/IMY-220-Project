@@ -1,0 +1,237 @@
+[{
+  "_id": {
+    "$oid": "6727e6db3dc3ae1ee1f4c204"
+  },
+  "id": 1,
+  "name": "test",
+  "surname": "test",
+  "email": "test@test.com",
+  "password": "test1234",
+  "profilePicture": "http://localhost:3000/assets/images/1730668374067-980910659.png",
+  "bio": "This is a short bio",
+  "instagram": "https://www.instagram.com/merida.bikes/?hl=en",
+  "facebook": "https://www.facebook.com/MeridaBikes",
+  "tiktok": "https://www.tiktok.com/@merida.bikes",
+  "twitter": "https://x.com/i/flow/login?redirect_after_login=%2Fmeridabikes",
+  "active": true,
+  "playlists": [
+    1,
+    2,
+    6
+  ],
+  "following": [
+    2,
+    3
+  ],
+  "followers": []
+},
+{
+  "_id": {
+    "$oid": "6727eaf33dc3ae1ee1f4c212"
+  },
+  "id": 2,
+  "name": "Ruan",
+  "surname": "le Roux",
+  "email": "ruan@gmail.com",
+  "password": "Ruan123",
+  "profilePicture": "http://localhost:3000/assets/images/profile-pic.png",
+  "bio": "Ruans bio",
+  "instagram": "",
+  "facebook": "",
+  "tiktok": "",
+  "twitter": "",
+  "active": true,
+  "playlists": [
+    3
+  ],
+  "following": [],
+  "followers": [
+    1
+  ]
+},
+{
+  "_id": {
+    "$oid": "6727eb6c3dc3ae1ee1f4c214"
+  },
+  "id": 3,
+  "name": "Juan",
+  "surname": "le Roux",
+  "email": "juan@gmai.com",
+  "password": "juan123",
+  "profilePicture": "http://localhost:3000/assets/images/profile-pic.png",
+  "bio": "",
+  "instagram": "",
+  "facebook": "",
+  "tiktok": "",
+  "twitter": "",
+  "active": true,
+  "playlists": [
+    4
+  ],
+  "following": [],
+  "followers": [
+    1
+  ]
+},
+{
+  "_id": {
+    "$oid": "6727ebc93dc3ae1ee1f4c216"
+  },
+  "id": 4,
+  "name": "Robin",
+  "surname": "le Roux",
+  "email": "robin@gmail.com",
+  "password": "robin123",
+  "profilePicture": "http://localhost:3000/assets/images/profile-pic.png",
+  "bio": "",
+  "instagram": "",
+  "facebook": "",
+  "tiktok": "",
+  "twitter": "",
+  "active": true,
+  "playlists": [
+    5
+  ],
+  "following": [],
+  "followers": []
+},
+{
+  "_id": {
+    "$oid": "6727ec963dc3ae1ee1f4c219"
+  },
+  "id": 5,
+  "name": "user",
+  "surname": "user",
+  "email": "user@gmail.com",
+  "password": "user1234",
+  "profilePicture": "http://localhost:3000/assets/images/profile-pic.png",
+  "bio": "",
+  "instagram": "",
+  "facebook": "",
+  "tiktok": "",
+  "twitter": "",
+  "active": true,
+  "playlists": [],
+  "following": [],
+  "followers": []
+},
+{
+  "_id": {
+    "$oid": "6727ecc13dc3ae1ee1f4c21a"
+  },
+  "id": 6,
+  "name": "Dubmo",
+  "surname": "Choncky",
+  "email": "choncky@gmail.com",
+  "password": "dumbo1234",
+  "profilePicture": "http://localhost:3000/assets/images/profile-pic.png",
+  "bio": "",
+  "instagram": "",
+  "facebook": "",
+  "tiktok": "",
+  "twitter": "",
+  "active": true,
+  "playlists": [],
+  "following": [],
+  "followers": []
+},
+{
+  "_id": {
+    "$oid": "6727ecdb3dc3ae1ee1f4c21b"
+  },
+  "id": 7,
+  "name": "Coco",
+  "surname": "Fluffy",
+  "email": "fluffy@gmaIl.com",
+  "password": "coco1234",
+  "profilePicture": "http://localhost:3000/assets/images/profile-pic.png",
+  "bio": "",
+  "instagram": "",
+  "facebook": "",
+  "tiktok": "",
+  "twitter": "",
+  "active": true,
+  "playlists": [],
+  "following": [],
+  "followers": []
+},
+{
+  "_id": {
+    "$oid": "6727ecf73dc3ae1ee1f4c21c"
+  },
+  "id": 8,
+  "name": "Test3",
+  "surname": "Test4",
+  "email": "test1@stedsst.com",
+  "password": "test1234",
+  "profilePicture": "http://localhost:3000/assets/images/profile-pic.png",
+  "bio": "",
+  "instagram": "",
+  "facebook": "",
+  "tiktok": "",
+  "twitter": "",
+  "active": true,
+  "playlists": [],
+  "following": [],
+  "followers": []
+},
+{
+  "_id": {
+    "$oid": "6727ecfb3dc3ae1ee1f4c21d"
+  },
+  "id": 9,
+  "name": "Test3",
+  "surname": "Test4",
+  "email": "test1@sasdtedsst.com",
+  "password": "test1234",
+  "profilePicture": "http://localhost:3000/assets/images/profile-pic.png",
+  "bio": "",
+  "instagram": "",
+  "facebook": "",
+  "tiktok": "",
+  "twitter": "",
+  "active": true,
+  "playlists": [],
+  "following": [],
+  "followers": []
+},
+{
+  "_id": {
+    "$oid": "6727ecfd3dc3ae1ee1f4c21e"
+  },
+  "id": 10,
+  "name": "Test3",
+  "surname": "Test4",
+  "email": "test1@sasdteadsst.com",
+  "password": "test1234",
+  "profilePicture": "http://localhost:3000/assets/images/profile-pic.png",
+  "bio": "",
+  "instagram": "",
+  "facebook": "",
+  "tiktok": "",
+  "twitter": "",
+  "active": true,
+  "playlists": [],
+  "following": [],
+  "followers": []
+},
+{
+  "_id": {
+    "$oid": "6727ecff3dc3ae1ee1f4c21f"
+  },
+  "id": 11,
+  "name": "Test3",
+  "surname": "Test4",
+  "email": "tesat1@sasdteadsst.com",
+  "password": "test1234",
+  "profilePicture": "http://localhost:3000/assets/images/profile-pic.png",
+  "bio": "",
+  "instagram": "",
+  "facebook": "",
+  "tiktok": "",
+  "twitter": "",
+  "active": true,
+  "playlists": [],
+  "following": [],
+  "followers": []
+}]
